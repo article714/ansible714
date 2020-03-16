@@ -1,0 +1,21 @@
+- name: configure and deploy the Gitlab On LXC on a node
+  hosts: GitlabNodes
+  remote_user: root
+  become: true
+
+  roles:
+    - lxd-node
+  tasks:
+    - name: Create GitLab container
+      lxc_container:
+        name: gitlab-container
+        backing_store: dir
+        directory: /var/lib/docker/LXC/gitlab
+        container_log: true
+        template: debian
+        template_options: --release buster --arch amd64
+        state: started
+        archive: false
+        archive_compression: none
+        container_config:
+          - 'lxc.cgroup.devices.allow=a *:* rmw'

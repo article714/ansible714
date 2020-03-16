@@ -1,0 +1,21 @@
+---
+# defaults file for debian-based-container
+
+custom_ssh_port: 22
+
+machine_type: 'lxd'
+
+main_if_is_bridged: false
+
+routing_enabled: false
+
+reset_firewall: false
+enable_firewall: false
+additional_fw_rules: []
+
+systemd_networkd_apply_config: false
+systemd_networkd_enable_resolved: true
+
+netplan_io: false
+
+network_manager: false

@@ -1,0 +1,49 @@
+---
+- name: Install Dependencies
+  apt:
+    name: python3-psycopg2
+    state: latest
+
+- name: Create odoo Postgresql user
+  become: true
+  become_user: "postgres"
+  vars:
+    ansible_ssh_pipelining: true
+  postgresql_user:
+    user: odoo
+    password: "{{ odoo_password }}"
+    db: postgres
+    role_attr_flags: CREATEDB,NOSUPERUSER
+
+
+- name: Default local rules for postgresql connection & access
+  postgresql_pg_hba:
+    dest: "/etc/postgresql/{{ POSTGRESQL_VERSION }}/main/pg_hba.conf"
+    contype: local
+    users: all,postgres,replication
+    databases: all
+    method: peer
+    
+
+- name: Grant users odoo to databases using peer authentication (IPv4)
+  postgresql_pg_hba:
+    dest: "/etc/postgresql/{{ POSTGRESQL_VERSION }}/main/pg_hba.conf"
+    contype: host
+    users: odoo,all,replication
+    source: 127.0.0.1/32
+    databases: all
+    method: md5
+  notify:
+    - ReStart Postgresql
+
+- name: Grant users odoo to databases using password (md5) authentication (Docker)
+  postgresql_pg_hba:
+    dest: "/etc/postgresql/{{ POSTGRESQL_VERSION }}/main/pg_hba.conf"
+    contype: host
+    users: odoo,all
+    source: "{{ DOCKER_NETWORK }}"
+    databases: all
+    method: md5
+  notify:
+    - ReStart Postgresql
+  when: odoo_on_docker_enable

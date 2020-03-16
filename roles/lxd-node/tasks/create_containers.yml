@@ -1,0 +1,130 @@
+---
+- name: Create a LXD containers (with mac-addr)
+  lxd_container:
+    name: '{{item.name}}'
+    state: started
+    ephemeral: no
+    source:
+      type: image
+      mode: pull
+      server: https://images.linuxcontainers.org
+      protocol: simplestreams
+      alias: '{{ item.image_alias }}'
+    devices:
+      eth0:
+        hwaddr: '{{ item.mac_address }}'
+        name: 'eth0'
+        nictype: 'bridged'
+        parent: '{{ item.container_bridge }}'
+        type: 'nic'
+    profiles: ['default']
+    wait_for_ipv4_addresses: false
+    timeout: 120
+  with_items: '{{ lxd_containers }}'
+  when: item.mac_address is defined
+
+- name: Create a LXD containers (without mac-addr)
+  lxd_container:
+    name: '{{item.name}}'
+    state: started
+    ephemeral: no
+    source:
+      type: image
+      mode: pull
+      server: https://images.linuxcontainers.org
+      protocol: simplestreams
+      alias: '{{ item.image_alias }}'
+    devices:
+      eth0:
+        hwaddr:
+        name: 'eth0'
+        nictype: 'bridged'
+        parent: '{{ item.container_bridge }}'
+        type: 'nic'
+    profiles: ['default']
+    wait_for_ipv4_addresses: false
+    timeout: 120
+  with_items: '{{ lxd_containers }}'
+  when: item.mac_address is not defined
+
+- name: check Systemd-Networkd Status
+  delegate_to: '{{item.name}}'
+  raw: 'systemctl status systemd-networkd'
+  register: systemd_networkd_status
+  failed_when: systemd_networkd_status.rc not in [0, 1, 3]
+  changed_when: false
+  with_items: '{{ lxd_containers }}'
+
+- name: save /etc/network/interfaces
+  delegate_to: '{{item.item.name}}'
+  raw: cp /etc/network/interfaces /etc/network/interfaces.save
+  when: item.rc != 0
+  with_items: '{{ systemd_networkd_status.results }}'
+
+- name: comment out  eth0 from /etc/network/interfaces
+  delegate_to: '{{item.item.name}}'
+  raw: perl -pi -e  's/^([^#])(.*eth0.*)$/# $1$2/' /etc/network/interfaces
+  when: item.rc != 0
+  with_items: '{{ systemd_networkd_status.results }}'
+
+- name: Restart networking in container
+  delegate_to: '{{item.item.name}}'
+  raw: 'systemctl restart networking'
+  when: item.rc != 0
+  with_items: '{{ systemd_networkd_status.results }}'
+
+- name: shutdown eth0 for container
+  delegate_to: '{{item.item.name}}'
+  raw: 'ip link set eth0 down'
+  when: item.rc != 0
+  with_items: '{{ systemd_networkd_status.results }}'
+
+- name: set static ip address for container
+  delegate_to: '{{item.item.name}}'
+  raw: 'ip addr add {{ item.item.container_ipv4 }} dev eth0'
+  when: item.rc != 0
+  with_items: '{{ systemd_networkd_status.results }}'
+
+- name: startup eth0 for container
+  delegate_to: '{{item.item.name}}'
+  raw: 'ip link set eth0 up'
+  when: item.rc != 0
+  with_items: '{{ systemd_networkd_status.results }}'
+
+- name: add simple route to gateway through et0 for container
+  delegate_to: '{{item.item.name}}'
+  raw: 'ip route add {{ item.item.container_gtw }} dev eth0'
+  when: item.rc != 0
+  with_items: '{{ systemd_networkd_status.results }}'
+
+- name: set default route for container
+  delegate_to: '{{item.item.name}}'
+  raw: 'ip route add default via {{ item.item.container_gtw }} dev eth0'
+  when: item.rc != 0
+  with_items: '{{ systemd_networkd_status.results }}'
+
+- name: add default nameserver
+  delegate_to: '{{item.item.name}}'
+  raw: perl -e 'open(FILE,">>","/etc/resolv.conf");print FILE "nameserver {{ item.item.default_ns}}\n";close FILE'
+  when: item.rc != 0
+  with_items: '{{ systemd_networkd_status.results }}'
+
+- name: check python is installed in container
+  delegate_to: '{{item.name}}'
+  raw: dpkg -s python3
+  register: python_install_check
+  failed_when: python_install_check.rc not in [0, 1]
+  changed_when: false
+  with_items: '{{ lxd_containers }}'
+
+- name: install python in container
+  delegate_to: '{{item.item.name}}'
+  raw: apt-get install -y python3
+  when: item.rc
+  with_items: '{{ python_install_check.results }}'
+
+- name: unmask Systemd-Networkd when needed
+  delegate_to: '{{item.item.name}}'
+  raw: 'systemctl unmask systemd-networkd'
+  when: item.rc > 0
+  with_items: '{{ systemd_networkd_status.results }}'

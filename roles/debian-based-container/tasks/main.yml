@@ -1,0 +1,9 @@
+---
+- include: dependencies.yml
+- include: filesystem.yml
+- include: private_key.yml
+- include: update-dns.yml
+
+- name: configure hostname and domain name
+  hostname:
+    name: '{{ host_name }}'

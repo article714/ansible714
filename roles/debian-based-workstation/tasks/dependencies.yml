@@ -1,0 +1,13 @@
+---
+- name: Install workstation tools
+  apt:
+- name: System dependencies (VPN)
+  apt:
+    name:
+      - net-tools
+      - netdiscover
+      - openvpn
+      - openvpn-systemd-resolved
+      - wireshark
+    update_cache: yes
+    state: latest

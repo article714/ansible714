@@ -1,0 +1,8 @@
+- name: QEMU agent
+  apt:
+    name:
+      - qemu-guest-agent
+
+    update_cache: yes
+    state: latest
+

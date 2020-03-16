@@ -1,0 +1,29 @@
+galaxy_info:
+  author: C. Guychard <christophe@article714.org>
+  description: Manage Webserver node
+  company: Article714
+
+  license: LGPL
+
+  min_ansible_version: 2.4
+
+  platforms:
+    - name: Ubuntu
+      versions:
+        - all
+    - name: Debian
+      versions:
+        - all
+
+  galaxy_tags:
+    - system
+    - webserver
+    - apache
+    - nginx
+    - debian
+    - ubuntu
+
+dependencies:
+  - { role: 'debian-based-container', when: machine_type == 'lxd' }
+  - { role: 'debian-based-host', when: machine_type == 'host' }
+  - role: ansible-role-systemd-networkd

@@ -1,0 +1,16 @@
+# Removes no more needed files
+
+- name: Detects files to delete
+  find:
+    paths:
+      - /etc/ansible/letsencrypt/keys
+      - /etc/ansible/letsencrypt/certs
+    age: 1w
+    patterns: '*.pem,*.csr'
+  register: files_to_delete
+
+- name: Ansible remove files
+  file:
+    path: "{{ item.path }}"
+    state: absent
+  with_items: "{{ files_to_delete.files }}"

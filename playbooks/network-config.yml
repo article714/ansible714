@@ -1,0 +1,8 @@
+- name: Update Network Configuration for Debian-based hosts
+  hosts: DebianNodes
+  remote_user: root
+  become: true
+
+  roles:
+    - ansible-role-systemd-networkd
+    - debian-based-host

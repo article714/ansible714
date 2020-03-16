@@ -1,0 +1,21 @@
+- name: System dependencies
+  apt:
+    name:
+      - python-requests
+      - python3-requests
+    update_cache: yes
+    state: latest
+
+- name: Install Proxmoxer support (Python3)
+  pip:
+    executable: pip3
+    name:
+      - proxmoxer
+    state: latest
+
+- name: Install Proxmoxer support (Python2)
+  pip:
+    executable: pip
+    name:
+      - proxmoxer
+    state: latest

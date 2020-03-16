@@ -1,0 +1,7 @@
+- name: configure and deploy the docker on a node
+  hosts: DockerNodes
+  remote_user: root
+  become: true
+
+  roles:
+    - docker-node

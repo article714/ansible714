@@ -1,0 +1,14 @@
+# Creates letsencrypt directory layout to host certificates
+- name: Create letsencrypt directory layout in /etc
+  file:
+    path: '/etc/letsencrypt/{{ item }}'
+    owner: root
+    group: root
+    mode: '0744'
+    state: directory
+  with_items:
+    - 'keys'
+    - 'certs'
+    - 'live'
+    - 'archive'
+  when: letsencrypt_enable|bool

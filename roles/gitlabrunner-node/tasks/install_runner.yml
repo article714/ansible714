@@ -1,0 +1,28 @@
+---
+- name: Install Gitlab Runner
+  apt:
+    name: gitlab-runner
+    state: present
+  notify:
+    - Start gitlab-runner
+
+- name: make gitlab-runner certs dir
+  file:
+    path: '/etc/gitlab-runner/certs'
+    owner: gitlab-runner
+    group: gitlab-runner
+    mode: '0770'
+    state: directory
+
+- name: Copy Apsdigit certs
+  copy:
+    src: "../certs/{{ item}}"
+    dest: "/etc/gitlab-runner/certs/{{ item}}"
+    owner: gitlab-runner
+    group: gitlab-runner
+    mode: '0770'
+  with_items:
+    - srv-gitlab.apsdigit.lan.crt
+    - srv-gitlab.apsdigit.lan.cer
+  notify:
+    - ReStart gitlab-runner

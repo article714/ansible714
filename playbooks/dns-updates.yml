@@ -1,0 +1,26 @@
+# Updating DNS entries
+#
+- name: Update DNS records
+  hosts: DebianNodes
+  become: false
+
+  roles:
+    - debian-based-host
+
+  tasks:
+    - name: Create DNS entries At OVH
+      ovh:
+        endpoint: 'ovh-eu'
+        application_key: '{{ OVH_APPLICATION_KEY }}'
+        application_secret: '{{ OVH_APPLICATION_SECRET }}'
+        consumer_key: '{{ OVH_CONSUMER_KEY }}'
+        service: dns
+        name: '{{ item.name }}'
+        value: '{{ item.value }}'
+        record_type: '{{ item.kind }}'
+        domain: '{{ item.zone }}'
+        state: modified
+        create: yes
+      delegate_to: 127.0.0.1
+      with_items: '{{ dns_entries }}'
+      become: no

@@ -1,0 +1,35 @@
+- name: Create Odoo user directory
+  file:
+    path: '/home/odoo/{{ item }}'
+    owner: odoo
+    group: odoo
+    mode: '0760'
+    state: directory
+  with_items:
+    - 'etc'
+    - 'addons'
+    - 'data'
+
+- name: Create Odoo ssh directory
+  file:
+    path: '/var/lib/odoo/.ssh'
+    owner: odoo
+    group: odoo
+    mode: '0700'
+    state: directory
+
+- name: Copy Odoo ssh private key in Odoo Home
+  copy:
+    src: '../keys/id_rsa_odoo'
+    dest: /var/lib/odoo/.ssh/id_rsa
+    owner: '{{ odoo_user }}'
+    group: '{{ odoo_user }}'
+    mode: '0600'
+
+- name: Copy Odoo ssh public key in Odoo Home
+  copy:
+    src: '../keys/id_rsa_odoo.pub'
+    dest: /var/lib/odoo/.ssh/id_rsa.pub
+    owner: '{{ odoo_user }}'
+    group: '{{ odoo_user }}'
+    mode: '0600'

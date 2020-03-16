@@ -1,0 +1,10 @@
+---
+- name: Import Gitlab CE repository gpg key
+  apt_key:
+    url: https://packages.gitlab.com/runner/gitlab-runner/gpgkey
+    state: present
+
+- name: Add Gitlab CE repository
+  apt_repository:
+    repo: 'deb [arch=amd64]  https://packages.gitlab.com/runner/gitlab-runner/{{ ansible_distribution|lower }}/ {{ ansible_distribution_release }} stable'
+    state: present

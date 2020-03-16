@@ -1,0 +1,21 @@
+---
+# defaults file for debian-based-host
+
+custom_ssh_port: 22
+
+machine_type: 'host'
+
+main_if_is_bridged: false
+
+routing_enabled: true
+
+reset_firewall: false
+enable_firewall: true
+additional_fw_rules: []
+
+systemd_networkd_apply_config: false
+systemd_networkd_enable_resolved: true
+
+netplan_io: false
+
+network_manager: false

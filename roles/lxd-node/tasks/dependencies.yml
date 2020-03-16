@@ -1,0 +1,40 @@
+---
+- name: Removes incompatible LXC/LXD tools
+  apt:
+    name:
+      - lxd
+      - lxc-utils
+    state: absent
+  retries: 3
+  delay: 15
+
+- name: System dependencies (snap)
+  apt:
+    name:
+      - snapd
+      - debian-archive-keyring
+    update_cache: yes
+    state: latest
+  retries: 3
+  delay: 15
+
+- name: (re)start snapd
+  systemd:
+    state: started
+    name: snapd
+
+- name: install LXD
+  command: snap install lxd
+
+- name: refresh LXD
+  command: snap refresh lxd
+
+- name: (re)start LXD
+  command: snap restart lxd
+
+- name: wait a bit so that everything is up and running
+  wait_for:
+    timeout: 40
+  delegate_to: localhost
+  run_once: true
+  become: false

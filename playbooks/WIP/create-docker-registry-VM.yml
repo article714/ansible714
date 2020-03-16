@@ -1,0 +1,75 @@
+- name: Create a new docker-registy-node VM by cloning a template
+  hosts: proxmoxnode
+  remote_user: root
+  become: true
+
+  roles:
+    - debian-based-host
+    - proxmox-node
+
+  tasks:
+    - name: Create VM for node
+      proxmox_kvm:
+        node: 'icbrest01'
+        agent: 'yes'
+        api_user: 'root@pam'
+        api_password: 'bonjour'
+        api_host: 'icbrest01'
+        clone: 'docker-node-tmpl'
+        name: 'docker-registry01'
+        full: 'yes'
+        storage: 'vzdata2'
+        state: 'present'
+        timeout: 900
+
+    - name: update VM configuration
+      proxmox_kvm:
+        node: 'icbrest01'
+        agent: 'yes'
+        api_user: 'root@pam'
+        api_password: 'bonjour'
+        api_host: 'icbrest01'
+        memory: 4096
+        name: 'docker-registry01'
+        state: 'present'
+        timeout: 900
+        update: yes
+
+    - name: start the VM
+      proxmox_kvm:
+        node: 'icbrest01'
+        name: 'docker-registry01'
+        api_user: 'root@pam'
+        api_password: 'bonjour'
+        api_host: 'icbrest01'
+        state: started
+        update: yes
+
+- name: Update target
+  hosts: new-vm
+  remote_user: root
+  become: true
+
+  tasks:
+    - name: wait for VM to be up
+      wait_for_connection:
+        delay: 60
+        timeout: 300
+
+    - name: update hostname
+      shell: /usr/bin/hostnamectl set-hostname docker-registry01
+
+    - name: update netplan config file
+      lineinfile:
+        path: /etc/netplan/50-cloud-init.yaml
+        regexp: '^(.*)- 10.7.29.138/24'
+        line: '            - 10.7.29.125/24'
+
+    - name: apply network config
+      shell: /usr/sbin/netplan apply
+
+    - name: reboot the VM
+      shell: /sbin/reboot -f
+
+
+

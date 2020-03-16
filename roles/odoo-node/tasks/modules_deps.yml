@@ -1,0 +1,30 @@
+- name: clone des modules Evosens
+  git:
+    repo: 'git@{{ git_server }}:odoo_evosens.git'
+    dest: /home/odoo/addons/odoo_evosens
+    version: '{{ evosens_odoo_version }}'
+    update: yes
+    force: yes
+    clone: yes
+    accept_hostkey: yes
+  become: yes
+  become_user: '{{ odoo_user }}'
+
+- name: mise à jour de la définition des dépendances pip/odoo
+  copy:
+    src: '{{ item }}'
+    dest: /home/odoo/addons
+    owner: '{{ odoo_user }}'
+    group: '{{ odoo_user }}'
+    remote_src: yes
+  with_items:
+    - /home/odoo/addons/odoo_evosens/requirements.txt
+    - /home/odoo/addons/odoo_evosens/modules_dependencies.txt
+
+- name: mise à jour du code source des modules Odoo
+  command: /home/odoo/addons/odoo_evosens/ci/clone_dependencies.py /home/odoo/addons 12.0
+  become: yes
+  become_user: '{{ odoo_user }}'
+  args:
+    chdir: '/home/odoo/addons'
+  notify: Restart Odoo

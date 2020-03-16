@@ -1,0 +1,90 @@
+---
+- include: dependencies.yml
+- include: firewall.yml
+
+- name: setup DKIM socket to listen to
+  lineinfile:
+    path: /etc/opendkim.conf
+    insertafter: "^Socket.*/.*\\.sock$"
+    state: present
+    line: 'Socket
+      inet:18018@localhost'
+
+- name: setup DKIM basic config
+  blockinfile:
+    path: /etc/opendkim.conf
+    insertafter: '^#SubDomains.*no$'
+    state: present
+    block: |
+      Canonicalization        relaxed/simple
+
+      OversignHeaders		From
+      SubDomains		yes
+       
+      ExternalIgnoreList      refile:/etc/opendkim/TrustedHosts
+      InternalHosts           refile:/etc/opendkim/TrustedHosts
+      KeyTable                /etc/opendkim/KeyTable
+      SigningTable            refile:/etc/opendkim/SigningTable
+
+- name: Create OpenDKim directory
+  file:
+    path: '/etc/{{ item }}'
+    owner: opendkim
+    group: root
+    mode: '0750'
+    state: directory
+  with_items:
+    - 'opendkim'
+    - 'opendkim/keys'
+  when: letsencrypt_enable|bool
+
+- name: Create Domain(s) directory
+  file:
+    path: '/etc/opendkim/keys/{{ item }}'
+    owner: opendkim
+    group: root
+    mode: '0750'
+    state: directory
+  with_items: '{{ dkim_domains }}'
+  when: letsencrypt_enable|bool
+
+- name: Copy Domain(s) keys
+  copy:
+    src: '../inventory/files/{{ item }}/mail.private'
+    dest: '/etc/opendkim/keys/{{ item }}/mail.private'
+    owner: opendkim
+    group: opendkim
+    mode: '0600'
+    force: yes
+  with_items: '{{ dkim_domains }}'
+
+- name: setup KeyTable
+  lineinfile:
+    path: /etc/opendkim/KeyTable
+    insertafter: EOF
+    state: present
+    line: 'mail._domainkey.{{ item }} {{ item }}:mail:/etc/opendkim/keys/{{ item }}/mail.private'
+    create: yes
+  with_items: '{{ dkim_domains }}'
+
+- name: Copy file with owner and permissions
+  copy:
+    src: '../inventory/files/{{ inventory_hostname }}/{{ item }}'
+    dest: '/etc/opendkim/{{ item }}'
+    owner: opendkim
+    group: opendkim
+    mode: '0644'
+    force: yes
+  with_items:
+    - TrustedHosts
+    - SigningTable
+
+- name: (re)start OpenDkim
+  systemd:
+    state: restarted
+    name: opendkim
+
+- name: (re)start Postfix
+  systemd:
+    state: restarted
+    name: postfix

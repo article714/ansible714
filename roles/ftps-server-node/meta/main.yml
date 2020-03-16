@@ -1,0 +1,28 @@
+galaxy_info:
+  author: C. Guychard <christophe@article714.org>
+  description: Manage FTP / FTPs data server
+  company: Article714
+
+  license: LGPL
+
+  min_ansible_version: 2.4
+
+  platforms:
+    - name: Ubuntu
+      versions:
+        - all
+    - name: Debian
+      versions:
+        - all
+
+  galaxy_tags:
+    - system
+    - ftp / ftps
+    - apache
+    - nginx
+    - debian
+    - ubuntu
+
+dependencies:
+  - role: debian-based-host
+  - role: ansible-role-systemd-networkd

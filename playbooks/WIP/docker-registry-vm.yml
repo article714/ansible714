@@ -1,0 +1,100 @@
+- name: configure and deploy the docker registry on a node
+  hosts: dockerregistries
+  remote_user: root
+  become: true
+
+  roles:
+    - proxmox-vm-debian
+    - docker-node
+    - nginxinc.nginx
+
+  tasks:
+    - name: create registry storage in /home
+      file:
+        path: /home/registry
+        owner: root
+        group: root
+        mode: '0755'
+        state: directory
+
+    - name: build the container
+      docker_container:
+        name: docker_registry
+        image: registry:2
+        restart: yes
+        restart_policy: always
+        published_ports:
+            - 5001:5001
+        volumes:
+            - /home/registry:/var/lib/registry
+        env:
+            REGISTRY_HTTP_ADDR: "0.0.0.0:5001"
+        state: started
+
+
+  vars:
+    letsencrypt_enable: false
+    nginx_http_template_enable: true
+    nginx_main_template_enable: true
+    nginx_main_template:
+      error_level: warn
+      http_enable: true
+      http_global_autoindex: false
+      port: 80
+      stream_enable: false
+      user: nginx
+      worker_connections: 256
+      worker_processes: auto
+      http_settings:
+        keepalive_timeout: 64
+        cache: false
+        rate_limit: false
+        keyval: false
+    nginx_http_template:
+      default:
+        template_file: http/default.conf.j2
+        conf_file_name: docker_reverse.conf
+        conf_file_location: /etc/nginx/conf.d/
+        port: 80
+        server_name: "{{ REGISTRY_SERVER_NAME }}"
+        error_page: /usr/share/nginx/html
+        autoindex: false
+        worker_processes: auto
+        reverse_proxy:
+          locations:
+            docker_registry:
+              location: /
+              proxy_pass: http://registry_server
+              proxy_redirect: off
+              proxy_read_timeout: 720
+              proxy_connect_timeout: 720
+              proxy_send_timeout: 720
+              # Add Headers for odoo proxy mode
+              proxy_set_header:
+                header_x_forwarded_host:
+                  name: X-Forwarded-Host
+                  value: "{{ REGISTRY_SERVER_NAME }}"
+                header_x_forwarded_for:
+                  name: X-Forwarded-For
+                  value: $proxy_add_x_forwarded_for
+                header_x_forwarded_proto:
+                  name: X-Forwarded-Proto
+                  value: $scheme
+                header_x_real_ip:
+                  name: X-Real-IP
+                  value: $remote_addr
+        upstreams:
+          docker_registry:
+            lb_method: least_conn
+            groups:
+              - docker
+            name: registry_server
+            zone_name: docker
+            zone_size: 64k
+            sticky_cookie: false
+            servers:
+              docker_registry_server:
+                address: 127.0.0.1
+                port: 5001
+                weight: 1
+                health_check: max_fails=3 fail_timeout=5s

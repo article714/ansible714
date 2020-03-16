@@ -1,0 +1,13 @@
+**/*.pyc
+**/.idea
+**/.settings
+**/.project
+**/.pydevproject
+**/.vscode
+**/__pycache__
+# Log & tmp directories
+**/log
+**/tmp
+# addition roles to be installed
+**/nginxinc.nginx
+**/oefenweb.postfix

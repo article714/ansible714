@@ -1,0 +1,168 @@
+---
+# TODO TODO TODO:
+# penser à régler les soucis avec le bridge docker_container
+#  Swagger:
+#   ufw default allow routed
+#   ufw route allow proto tcp from any to any port 8080
+#   ufw  allow out proto tcp from any to any port 8080
+#   ufw  allow proto tcp from any to any port 8080
+
+- name: reset Firewall rules
+  ufw:
+    state: reset
+  when: reset_firewall
+
+- name: Init firewall TCP rules default deny
+  ufw:
+    default: deny
+    direction: '{{ item }}'
+  with_items:
+    - 'outgoing'
+    - 'incoming'
+
+- name: Init firewall TCP rules default deny (routed)
+  ufw:
+    default: deny
+    direction: 'routed'
+  with_items:
+    - 'routed'
+  when: routing_enabled|bool
+
+- name: allow outgoing forwarding when main_if is bridged
+  ufw:
+    default: allow
+    direction: '{{ item }}'
+    interface: '{{ main_network_if }}'
+  with_items:
+    - 'outgoing'
+  when: main_if_is_bridged|bool and main_network_if != "any" and routing_enabled|bool
+
+- name: Init firewall rules -> DNS, NTP (allow out on all interfaces, any protocol)
+  ufw:
+    rule: '{{ item.rule }}'
+    port: '{{ item.port }}'
+    direction: '{{ item.dir }}'
+  with_items:
+    - { 'port': '53', 'dir': 'out', 'rule': 'allow' }
+    - { 'port': '123', 'dir': 'out', 'rule': 'allow' }
+
+- name: Init firewall TCP rules (SSH, http) --> Forward/routed
+  ufw:
+    rule: '{{ item.rule }}'
+    port: '{{ item.port }}'
+    proto: tcp
+    interface: '{{ main_network_if }}'
+    direction: '{{ item.dir }}'
+    route: yes
+  with_items:
+    - { 'port': '{{ custom_ssh_port }}', 'dir': 'in', 'rule': 'allow' }
+    - { 'port': '{{ custom_ssh_port }}', 'dir': 'out', 'rule': 'allow' }
+    - { 'port': 'ssh', 'dir': 'in', 'rule': 'allow' }
+    - { 'port': 'ssh', 'dir': 'out', 'rule': 'allow' }
+    - { 'port': 'smtp', 'dir': 'out', 'rule': 'allow' }
+    - { 'port': 'http', 'dir': 'in', 'rule': 'allow' }
+    - { 'port': 'http', 'dir': 'out', 'rule': 'allow' }
+    - { 'port': 'https', 'dir': 'in', 'rule': 'allow' }
+    - { 'port': 'https', 'dir': 'out', 'rule': 'allow' }
+  when: main_if_is_bridged|bool and main_network_if != "any"
+
+- name: Init firewall UDP rules (DNS, NTP) --> Forward/routed
+  ufw:
+    rule: '{{ item.rule }}'
+    port: '{{ item.port }}'
+    proto: udp
+    interface: '{{ main_network_if }}'
+    direction: '{{ item.dir }}'
+    route: yes
+  with_items:
+    - { 'port': '53', 'dir': 'in', 'rule': 'allow' }
+    - { 'port': '53', 'dir': 'out', 'rule': 'allow' }
+    - { 'port': '123', 'dir': 'in', 'rule': 'allow' }
+    - { 'port': '123', 'dir': 'out', 'rule': 'allow' }
+    - { 'port': '5353', 'dir': 'in', 'rule': 'allow' }
+    - { 'port': '5353', 'dir': 'out', 'rule': 'allow' }
+  when: main_if_is_bridged|bool and main_network_if != "any"
+
+- name: Init firewall TCP rules (SSH, http) --> standards
+  ufw:
+    rule: '{{ item.rule }}'
+    port: '{{ item.port }}'
+    proto: tcp
+    interface: '{{ main_network_if }}'
+    direction: '{{ item.dir }}'
+  with_items:
+    - { 'port': '{{ custom_ssh_port }}', 'dir': 'in', 'rule': 'allow' }
+    - { 'port': 'smtp', 'dir': 'out', 'rule': 'allow' }
+    - { 'port': 'http', 'dir': 'out', 'rule': 'allow' }
+    - { 'port': 'https', 'dir': 'out', 'rule': 'allow' }
+  when: main_network_if != "any"
+
+- name: Init firewall TCP rules (SSH, http) --> standards
+  ufw:
+    rule: '{{ item.rule }}'
+    port: '{{ item.port }}'
+    proto: tcp
+    direction: '{{ item.dir }}'
+  with_items:
+    - { 'port': '{{ custom_ssh_port }}', 'dir': 'in', 'rule': 'allow' }
+    - { 'port': 'smtp', 'dir': 'out', 'rule': 'allow' }
+    - { 'port': 'http', 'dir': 'out', 'rule': 'allow' }
+    - { 'port': 'https', 'dir': 'out', 'rule': 'allow' }
+  when: main_network_if == "any"
+
+- name: Init firewall UDP rules --> standards
+  ufw:
+    rule: '{{ item.rule }}'
+    port: '{{ item.port }}'
+    proto: udp
+    interface: '{{ main_network_if }}'
+    direction: '{{ item.dir }}'
+  with_items:
+    - { 'port': '5353', 'dir': 'out', 'rule': 'allow' }
+
+- name: Init firewall TCP rules (SSH, http) --> standards
+  ufw:
+    rule: '{{ item.rule }}'
+    port: '{{ item.port }}'
+    proto: tcp
+    interface: '{{ main_network_if }}'
+    direction: '{{ item.dir }}'
+  with_items:
+    - { 'port': '{{ custom_ssh_port }}', 'dir': 'in', 'rule': 'allow' }
+    - { 'port': 'ssh', 'dir': 'out', 'rule': 'allow' }
+    - { 'port': 'smtp', 'dir': 'out', 'rule': 'allow' }
+    - { 'port': 'http', 'dir': 'out', 'rule': 'allow' }
+    - { 'port': 'https', 'dir': 'out', 'rule': 'allow' }
+  when: main_network_if != "any"
+
+- name: Insert/Update "A714 rules" configuration footer /etc/ufw/before.rules
+  lineinfile:
+    path: /etc/ufw/before.rules
+    insertbefore: "^# don't delete the 'COMMIT' line or these rules won't be processed$"
+    state: present
+    line: '# END ANSIBLE-A714 MANAGED BLOCK'
+
+- name: Insert/Update "A714 rules" configuration footer /etc/ufw/before.rules
+  lineinfile:
+    path: /etc/ufw/before.rules
+    insertbefore: '^#\ END\ ANSIBLE-A714\ MANAGED\ BLOCK$'
+    regexp: '^#\ START\ ANSIBLE-A714\ MANAGED\ BLOCK$'
+    state: present
+    line: '# START ANSIBLE-A714 MANAGED BLOCK'
+
+- name: Insert/Update "A714 rules" configuration block in /etc/ufw/before.rules
+  lineinfile:
+    path: /etc/ufw/before.rules
+    insertbefore: '^#\ END\ ANSIBLE-A714\ MANAGED\ BLOCK$'
+    state: present
+    line: '{{ item }}'
+  with_items: '{{ additional_fw_rules }}'
+
+- name: Disable Firewall
+  ufw:
+    state: disabled
+
+- name: re-enable Firewall
+  ufw:
+    state: enabled
+  when: enable_firewall|bool

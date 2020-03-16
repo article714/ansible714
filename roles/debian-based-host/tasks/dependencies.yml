@@ -1,0 +1,74 @@
+- name: Install packages that allow apt to be used over HTTPS
+  apt:
+    name:
+      - apt-transport-https
+      - ca-certificates
+      - curl
+      - gnupg-agent
+      - software-properties-common
+    state: present
+    update_cache: yes
+  retries: 3
+  delay: 15
+  register: result
+  until: result is not failed
+
+- name: System dependencies
+  apt:
+    name:
+      - aptitude
+      - bridge-utils
+      - etckeeper
+      - fail2ban
+      - iptables
+      - libuser
+      - net-tools
+      - openssh-server
+      - python3
+      - python3-pip
+      - python3-systemd
+      - python-pip
+      - systemd
+      - ufw
+    update_cache: yes
+    state: latest
+
+- name: Netplan.io when needed
+  apt:
+    name:
+      - netplan.io
+    update_cache: yes
+    state: latest
+  when: netplan_io
+
+- name: Remove Netplan.io when not needed
+  apt:
+    name:
+      - netplan.io
+    update_cache: yes
+    state: absent
+  when: not netplan_io
+
+- name: NetworkManager is not needed
+  apt:
+    name:
+      - network-manager
+    update_cache: yes
+    state: absent
+  when: not network_manager
+
+- name: NetworkManager is needed
+  apt:
+    name:
+      - network-manager
+    update_cache: yes
+    state: latest
+  when: network_manager
+
+- name: Remove useless packages from the cache
+  apt:
+    autoclean: yes
+
+- name: Remove dependencies that are no longer required
+  apt:
+    autoremove: yes

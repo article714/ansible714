@@ -1,0 +1,5 @@
+---
+- include: dependencies.yml
+- include: filesystem.yml
+- include: modules_deps.yml
+- include: config.yml

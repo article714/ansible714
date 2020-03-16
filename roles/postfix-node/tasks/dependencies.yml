@@ -1,0 +1,20 @@
+---
+- name: Software dependencies
+  apt:
+    name:
+      - postfix
+      - rsyslog
+      - opendkim
+      - opendkim-tools
+    update_cache: yes
+    state: latest
+
+- name: Software dependencies (software to remove)
+  apt:
+    name:
+      - exim4-base
+      - exim4-config
+      - exim4-daemon-light
+    purge: yes
+    update_cache: yes
+    state: absent

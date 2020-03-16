@@ -1,0 +1,34 @@
+# Update any letsencrypt certificate
+#
+- name: Update Let's Encrypt certificates
+  hosts: WebserverNodes
+  remote_user: root
+  become: true
+
+  roles:
+    - webserver-node
+
+  tasks:
+    - name: refresh DNS @ OVH
+      ovh:
+        endpoint: 'ovh-eu'
+        application_key: '{{ OVH_APPLICATION_KEY }}'
+        application_secret: '{{ OVH_APPLICATION_SECRET }}'
+        consumer_key: '{{ OVH_CONSUMER_KEY }}'
+        service: dns
+        domain: '{{ OVH_DOMAIN }}'
+        name: refresh
+      delegate_to: 127.0.0.1
+      become: no
+
+    - name: reload apache2
+      service:
+        name: apache2
+        state: restarted
+      when: http_server_flavor == "apache"
+
+    - name: reload nginx
+      service:
+        name: nginx
+        state: restarted
+      when: http_server_flavor == "nginx"

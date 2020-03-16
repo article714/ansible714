@@ -1,0 +1,33 @@
+#
+# Manage a Postfix instances
+#
+
+- name: Manage LXD-Nodes
+  hosts: LXDNodes
+  remote_user: root
+  become: true
+  gather_facts: yes
+
+  tasks:
+    - name: LXD Node
+      include_role:
+        name: lxd-node
+      when: machine_type == 'host'
+  tags:
+    - host_config
+
+- name: Postfix Server Management
+  hosts: PostfixNodes
+  remote_user: root
+  become: true
+  gather_facts: no
+
+  pre_tasks:
+    - setup:
+      when: machine_type == "host"
+
+  roles:
+    - postfix-node
+
+  tags:
+    - mail_config

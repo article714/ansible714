@@ -1,0 +1,5 @@
+---
+- name: Generate an OpenSSL private key for ansible
+  openssl_privatekey:
+    path: /etc/ansible/keys/default_ansible.pem
+    size: 4096

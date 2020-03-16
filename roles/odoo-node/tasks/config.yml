@@ -1,0 +1,32 @@
+---
+- name: liste des addons dir
+  list_odoo_addons_dir:
+    base_dir: /home/odoo/addons
+  register: odoo_all_addons_path
+
+- name: Arrêt Odoo
+  service:
+    name: '{{ odoo_service }}'
+    state: stopped
+
+- name: Generate Odoo configuration file
+  template:
+    src: 'odoo-{{ odoo_version }}.conf'
+    dest: '{{ odoo_config_file }}'
+    owner: '{{ odoo_user }}'
+    group: '{{ odoo_user }}'
+    mode: '0600'
+    force: "{{ odoo_force_config and 'yes' or 'no' }}"
+    backup: yes
+
+- name: On charge les modules de base
+  command:
+    cmd: odoo  -d '{{ odoo_config_db_name }}' -c /etc/odoo/odoo.conf --without-demo=all --logfile=/var/log/odoo/odoo_build.log --stop-after-init -i web,base
+  become: yes
+  become_user: '{{ odoo_user }}'
+  when: odoo_config_db_name |string
+
+- name: Redémarrage Odoo
+  service:
+    name: '{{ odoo_service }}'
+    state: restarted

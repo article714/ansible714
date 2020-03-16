@@ -1,0 +1,12 @@
+# To use the roles and playbooks defined in this repository,
+# you also need to install the following Python packages
+ansible
+ansible-lint
+ansible-test
+autopep8
+black
+flake8
+ovh
+pep8
+pylint
+pytest

@@ -1,0 +1,27 @@
+- name: configure and deploy the docker on a node
+  hosts: dockervms
+  remote_user: root
+  become: true
+
+  roles:
+    - proxmox-vm-debian
+    - docker-node
+
+  tasks:
+
+    - name: Put Docker registry  & IC server addresses in etc/hosts
+      lineinfile:
+        path: /etc/hosts
+        line: "{{item}}"
+        state: present
+      with_items:
+        - "10.7.29.68 icbrest01.apsdigit.lan icbrest01"
+        - "10.7.29.125 dockerreg-brest01"
+
+    - name: Put Insecure registry /etc/default/docker
+      lineinfile:
+        path: /etc/default/docker
+        line: "{{item}}"
+        state: present
+      with_items:
+        - 'DOCKER_OPTS="--insecure-registry 10.7.29.125:5001 --insecure-registry:dockerreg-brest01:5001"'

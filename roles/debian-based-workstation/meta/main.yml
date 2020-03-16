@@ -1,0 +1,28 @@
+galaxy_info:
+  author: C. Guychard <christophe@article714.org>
+  description: Manage Linux Workstations
+  company: Article714
+
+  license: LGPL
+
+  min_ansible_version: 2.4
+
+  platforms:
+    - name: Ubuntu
+      versions:
+        - all
+    - name: Debian
+      versions:
+        - all
+
+  galaxy_tags:
+    - system
+    - workstation
+    - debian
+    - ubuntu
+
+dependencies:
+  - role: ansible-role-systemd-networkd
+  - role: debian-based-host
+  - role: docker-node
+  - role: lxd-node

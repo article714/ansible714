@@ -1,0 +1,39 @@
+---
+- name: Disable Firewall
+  ufw:
+    state: disabled
+
+- name: Update firewall rules (TCP, routed/forwarded)
+  ufw:
+    rule: '{{ item.rule }}'
+    port: '{{ item.port }}'
+    proto: tcp
+    interface: '{{ main_network_if }}'
+    direction: '{{ item.dir }}'
+    route: yes
+  with_items:
+    - { 'port': 'ftp', 'dir': 'in', 'rule': 'allow' }
+    - { 'port': 'ftps', 'dir': 'in', 'rule': 'allow' }
+    - { 'port': 'ftp', 'dir': 'out', 'rule': 'allow' }
+    - { 'port': 'ftps', 'dir': 'out', 'rule': 'allow' }
+    - { 'port': '5000:5100', 'dir': 'out', 'rule': 'allow' }
+    - { 'port': '5000:5100', 'dir': 'in', 'rule': 'allow' }
+
+- name: Update firewall rules (TCP)
+  ufw:
+    rule: '{{ item.rule }}'
+    port: '{{ item.port }}'
+    proto: tcp
+    interface: '{{ main_network_if }}'
+    direction: '{{ item.dir }}'
+  with_items:
+    - { 'port': 'ftp', 'dir': 'in', 'rule': 'allow' }
+    - { 'port': 'ftps', 'dir': 'in', 'rule': 'allow' }
+    - { 'port': 'ftp', 'dir': 'out', 'rule': 'allow' }
+    - { 'port': 'ftps', 'dir': 'out', 'rule': 'allow' }
+    - { 'port': '5000:5100', 'dir': 'out', 'rule': 'allow' }
+    - { 'port': '5000:5100', 'dir': 'in', 'rule': 'allow' }
+
+- name: Enable Firewall
+  ufw:
+    state: enabled

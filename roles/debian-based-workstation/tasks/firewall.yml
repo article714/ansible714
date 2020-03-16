@@ -1,0 +1,20 @@
+---
+- name: Disable Firewall
+  ufw:
+    state: disabled
+
+- name: Update firewall rules (UDP)
+  ufw:
+    rule: allow
+    port: '{{ item.port }}'
+    proto: udp
+    interface: '{{ main_network_if }}'
+    direction: '{{ item.dir }}'
+    route: yes
+  with_items:
+    - { 'port': '547', 'dir': 'out', 'rule': 'allow' }
+    - { 'port': '546', 'dir': 'in', 'rule': 'allow' }
+
+- name: Enable Firewall
+  ufw:
+    state: enabled

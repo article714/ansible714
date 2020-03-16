@@ -1,0 +1,7 @@
+- name: start and enable systemd-resolved
+  service: name=systemd-resolved enabled=yes state=started
+  when: systemd_networkd_enable_resolved
+
+- name: configure hostname
+  hostname:
+    name: '{{ host_name }}'

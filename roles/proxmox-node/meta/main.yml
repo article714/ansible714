@@ -1,0 +1,25 @@
+galaxy_info:
+  author: C. Guychard <christophe@article714.org>
+  description: Manage Proxmox Node
+  company: Articke714
+
+  license: LGPL
+
+  min_ansible_version: 2.4
+
+  platforms:
+    - name: Ubuntu
+      versions:
+        - all
+    - name: Debian
+      versions:
+        - all
+
+  galaxy_tags:
+    - system
+    - debian
+    - ubuntu
+    - proxmox
+
+dependencies:
+  - role: debian-based-host

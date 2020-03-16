@@ -1,0 +1,10 @@
+# To use the roles and playbooks defined in this repository,
+# you also need to install any role defined here:
+#
+#  while read role; do if ! [[ $role =~ ^\#.*  ]]; then
+#       ansible-galaxy install ${role};
+#      fi
+#    done < galaxy_roles.txt
+#
+nginxinc.nginx
+oefenweb.postfix

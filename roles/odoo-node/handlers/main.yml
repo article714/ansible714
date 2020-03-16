@@ -1,0 +1,7 @@
+---
+# handlers file for odoo-node
+
+- name: Restart Odoo
+  service:
+    name: '{{ odoo_service }}'
+    state: restarted

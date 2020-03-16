@@ -1,0 +1,23 @@
+galaxy_info:
+  author: C. Guychard <christophe@article714.org>
+  description: Manage Debian/Ubuntu server
+  company: Article714
+
+  license: LGPL
+
+  min_ansible_version: 2.4
+
+  platforms:
+    - name: Ubuntu
+      versions:
+        - all
+    - name: Debian
+      versions:
+        - all
+
+  galaxy_tags:
+    - system
+    - debian
+    - ubuntu
+
+dependencies:

@@ -1,0 +1,14 @@
+---
+- name: Install Docker CE
+  apt:
+    name: docker-ce
+    state: present
+  notify:
+    - Start Docker
+
+- name: Install Python Docker support
+  pip:
+     executable: pip3
+     name: 
+       - docker 
+     state: latest

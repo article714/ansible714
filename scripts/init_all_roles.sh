@@ -1,37 +1,87 @@
 #!/bin/bash
-
 # set -x
 
-mkdir -p log
+#------------------------------------
+# Parameters, list of roles
+
+a714_repo='git@github.com:article714/ansible714.git
+'
+
+
+#------------------------------------
+# functions 
+
+clone_repos(){
+  for r in ${repos}; do
+
+    dir_name=$(echo ${r} | sed -E "s/(^.*)\:((.*)\/)*(.*)((\.git)|$)/\4/")
+    if [ -d ${dir_name} ]; then
+      cd ${dir_name}
+      git pull 0>&1 >/dev/null
+      cd ..
+    else
+      git clone ${r}
+    fi
+  done
+
+}
+
+get_galaxy_roles(){
+
+    while read role; do
+        if ! [[ $role =~ ^\#.* ]]; then
+            ansible-galaxy install ${role}
+        fi
+    done <./ansible714/galaxy_roles.txt
+
+}
+
+clean_pb_links(){
+
+    links=$(find playbooks/ -type l)
+    for l in ${links}; do
+        rm -f ${l}
+    done
+
+}
+
+recreate_links(){
+    playbooks=$(find foreign/ -type f -iwholename 'foreign/*/playbooks/*.yml')
+    rm -f playbooks/.gitignore
+    for p in ${playbooks}; do
+        echo ${p}
+        playbook_name=$(basename ${p})
+        if [ -f playbooks/${playbook_name} -o -L playbooks/${playbook_name} ]; then
+            echo "${playbook_name} already exists"
+        else
+            ln -s ${curdir}/${p} playbooks/${playbook_name}
+            echo "${playbook_name}" >>playbooks/.gitignore
+        fi
+    done
+}
+
+#------------------------------------
+# main script go
 
 curdir=$(pwd)
 
-while read role; do
-    if ! [[ $role =~ ^\#.* ]]; then
-        ansible-galaxy install ${role}
-    fi
-done <galaxy_roles.txt
+
+# update roles & modules repos
+
+clean_pb_links
+
+repos=${a714_repo}
+clone_repos
 
 cd ./foreign/
-./init_foreign.sh
+repos=`cat ./ansible714/ansible_dependencies.txt | grep -e '^#.*'`
+clone_repos
 cd -
 
-# clean links
-links=$(find playbooks/ -type l)
-for l in ${links}; do
-    rm -f ${l}
-done
+recreate_links
 
-# re-create links
-playbooks=$(find foreign/ -type f -iwholename 'foreign/*/playbooks/*.yml')
-rm -f playbooks/.gitignore
-for p in ${playbooks}; do
-    echo ${p}
-    playbook_name=$(basename ${p})
-    if [ -f playbooks/${playbook_name} -o -L playbooks/${playbook_name} ]; then
-        echo "${playbook_name} already exists"
-    else
-        ln -s ${curdir}/${p} playbooks/${playbook_name}
-        echo "${playbook_name}" >>playbooks/.gitignore
-    fi
-done
+
+# get galaxy roles
+get_galaxy_roles
+
+

@@ -8,6 +8,7 @@ if [ $# -eq 0 ] || [ $# -gt 1 ]; then
     show_usage
 else
     echo "Create $1 directory layout"
+    mkdir -p $1/ansible714
     mkdir -p $1/foreign
     mkdir -p $1/inventory/files
     mkdir -p $1/inventory/group_vars
@@ -18,9 +19,7 @@ else
     echo "Copy sample configuration script"
     cp ./samples/ansible.cfg $1
     echo "Copy initialisation scripts"
-    cp ./galaxy_roles.txt $1
     cp ./scripts/init_all_roles.sh $1
-    cp ./scripts/init_foreign.sh $1/foreign
     cd $1
     ./init_all_roles.sh
     cd -

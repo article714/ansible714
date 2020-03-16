@@ -1,3 +1,5 @@
+# Recettes Ansible pour Article714
+
 Ce dépôt contient l'ensemble de l'outillage d'administration Article714,
 sur base [Ansible](http//ansible.com)
 
@@ -5,23 +7,23 @@ Cet outillage ne peut pas être utilisé en tant que tel mais doit être complé
 fichiers de configuration permettant de décrire l'infastructure sur la quelle les
 'recettes' s'appliquent.
 
-# Répertoire (dépôt) d'inventaire utilisant les recettes Ansible714
+## Répertoire (dépôt) d'inventaire utilisant les recettes Ansible714
 
-## Création d'un inventaire
+### Création d'un inventaire
 
-### initialisation de l'aborescence
+**initialisation de l'aborescence:**
 
 1. Création du répertoire cible
 2. intialisation de l'arborescence via le script `./scripts/build_inventory_dir.sh <inventory directory full path`
 
-## Mise à jour des recettes:
+### Mise à jour des recettes
 
 Dans le répertoire de l'inventaire:
 `./init_all_roles.sh`
 
-# Mise en oeuvre d'Ansible sur une machine d'admin
+## Mise en oeuvre d'Ansible sur une machine d'admin
 
-## Création du virtualenv (python)
+### Création du virtualenv (python)
 
 1. Installation de `virtualenv`, `virtualenvwrapper`, `python3` sur la machine cliente
 
@@ -34,7 +36,7 @@ Dans le répertoire de l'inventaire:
 
 3. Installation dans le virtualenv ansible des dépendances:
 
-   ```
+   ```shell
    workon ansible
    pip install --upgrade -r requirements.txt
    ```
@@ -43,20 +45,20 @@ Dans le répertoire de l'inventaire:
 
 4. Initialisation des modules _foreign_ et des modules _galaxy_ qu'on utilise dans les scripts
 
-   ```
+   ```shell
    ./init_all_roles.sh
    ```
 
 5. On teste si le tout fonctionne
 
-   ```
+   ```shell
    workon ansible
    ansible all -m ping
    ```
 
    This command will try to connect to each host in the **./hosts** inventory files
 
-## Exécution des playbooks
+### Exécution des playbooks
 
 1. S'assurer que la configuration des machines est correcte dans l'inventaire:
 
@@ -67,13 +69,13 @@ Dans le répertoire de l'inventaire:
 
    par exemple:
 
-   ```
+   ```shell
    ansible-playbook [--ask-vault-pass] playbooks/update-debian-software.yml
    ```
 
    l'option _--ask-vault-pass_ est à spécifier si il est nécessaire de fournir un mot de passe pour déchiffrer certaines valeurs (voir section suivante)
 
-## Gestion des mots de passe et données secrètes
+### Gestion des mots de passe et données secrètes
 
 Ansible permet de [chiffrer les données sensibles](https://docs.ansible.com/ansible/latest/user_guide/vault.html)
 
@@ -83,8 +85,10 @@ en utilisant des commandes du type:
 
 Les mots de passe ainsi chiffrés ont été stockés dans le fichier \*./inventory/vars/\_secrets.yml
 
-## Tout mis bout à bout: lancement de la mise à jour/installation des serveurs web:
+### Tout mis bout à bout
 
-    ```
+/ex. lancement de la mise à jour/installation des serveurs web
+
+    ```shell
     ansible-playbook  --ask-vault-pass playbooks/webservers.yml
     ```

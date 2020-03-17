@@ -1,0 +1,42 @@
+#
+# Manage a Postgresql Server instance
+#
+- name: configure and deploy Postgresql
+  hosts: PgNodes
+  remote_user: root
+  become: true
+
+  roles:
+    - psql-server
+
+
+- name: Manage LXD-Nodes
+  hosts: LXDNodes
+  remote_user: root
+  become: true
+  gather_facts: yes
+
+  tasks:
+    - name: LXD Node
+      include_role:
+        name: lxd-node
+      when: machine_type == 'host'
+
+  tags:
+    - host_config
+
+- name: Manage Postgresql servers
+  hosts: PgNodes
+  remote_user: root
+  become: true
+  gather_facts: yes
+
+  pre_tasks:
+    - setup:
+      when: machine_type == "host"
+
+  roles:
+    - psql-server
+
+  tags:
+    - pg_config

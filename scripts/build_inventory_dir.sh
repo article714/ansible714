@@ -17,6 +17,7 @@ else
     mkdir -p $1/playbooks
     echo "Copy sample configuration script"
     cp ./samples/ansible.cfg $1
+    cp ./samples/.gitignore $1
     echo "Copy initialisation scripts"
     cp ./scripts/init_all_roles.sh $1
     cd $1

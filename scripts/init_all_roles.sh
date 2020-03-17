@@ -92,6 +92,10 @@ repos=${a714_repo}
 clone_repos
 
 repos=$(cat ./ansible714/ansible_dependencies.txt | grep -v -e '^#.*')
+
+if [ -d "./foreign" ]; then
+    mkdir -p ./foreign
+fi
 cd ./foreign/
 clone_repos
 cd ../

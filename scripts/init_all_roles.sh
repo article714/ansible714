@@ -25,7 +25,7 @@ clone_repos() {
                 git pull 0>&1 >/dev/null
                 cd ..
             else
-                git clone ${r}
+                git clone ${url}
             fi
 
         else
@@ -35,7 +35,7 @@ clone_repos() {
                 git pull 0>&1 >/dev/null
                 cd ..
             else
-                git clone --branch ${branch} ${r}
+                git clone --branch ${branch} ${url}
             fi
         fi
 

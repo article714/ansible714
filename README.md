@@ -89,6 +89,6 @@ Les mots de passe ainsi chiffrés ont été stockés dans le fichier \*./invento
 
 /ex. lancement de la mise à jour/installation des serveurs web
 
-    ```shell
-    ansible-playbook  --ask-vault-pass playbooks/webservers.yml
-    ```
+```shell
+ansible-playbook  --ask-vault-pass playbooks/webservers.yml
+```

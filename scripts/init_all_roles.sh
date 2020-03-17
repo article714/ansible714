@@ -1,38 +1,49 @@
 #!/bin/bash
-set -x
+# set -x
 
 #------------------------------------
 # Parameters, list of roles
 
-a714_repo='git@github.com:article714/ansible714.git
+a714_repo='git@githu.com:article714/ansible714.git
 '
 
-
 #------------------------------------
-# functions 
+# functions
 
-clone_repos(){
-  for r in ${repos}; do
+clone_repos() {
+    for r in ${repos}; do
 
-    url=`echo ${repos} | cut -f 1 -d ' ' -`
-    branch=`echo ${repos} | cut -f 2 -d ' ' -`
+        url=$(echo ${repos} | cut -f 1 -d ' ' -)
+        branch=$(echo ${repos} | cut -f 2 -d ' ' -)
 
-    if [ "${url}" != "${branch}" ]; then
-    fi
+        dir_name=$(echo ${url} | sed -E "s/(^.*)\:((.*)\/)*(.*)((\.git)|$)/\4/")
 
-    dir_name=$(echo ${r} | sed -E "s/(^.*)\:((.*)\/)*(.*)((\.git)|$)/\4/")
-    if [ -d ${dir_name} ]; then
-      cd ${dir_name}
-      git pull 0>&1 >/dev/null
-      cd ..
-    else
-      git clone ${r}
-    fi
-  done
+        if [ "${url}" = "${branch}" ]; then
+
+            if [ -d ${dir_name} ]; then
+                cd ${dir_name}
+                git pull 0>&1 >/dev/null
+                cd ..
+            else
+                git clone ${r}
+            fi
+
+        else
+            if [ -d ${dir_name} ]; then
+                cd ${dir_name}
+                git checkout ${branch}
+                git pull 0>&1 >/dev/null
+                cd ..
+            else
+                git clone --branch ${branch} ${r}
+            fi
+        fi
+
+    done
 
 }
 
-get_galaxy_roles(){
+get_galaxy_roles() {
 
     while read role; do
         if ! [[ $role =~ ^\#.* ]]; then
@@ -42,7 +53,7 @@ get_galaxy_roles(){
 
 }
 
-clean_pb_links(){
+clean_pb_links() {
 
     links=$(find playbooks/ -type l)
     for l in ${links}; do
@@ -51,7 +62,7 @@ clean_pb_links(){
 
 }
 
-recreate_links(){
+recreate_links() {
     pb_sources='foreign ansible714'
     for pbs in ${pb_sources}; do
         playbooks=$(find ${pbs}/ -type f -iwholename '*/playbooks/*.yml')
@@ -73,7 +84,6 @@ recreate_links(){
 
 curdir=$(pwd)
 
-
 # update roles & modules repos
 
 clean_pb_links
@@ -81,15 +91,12 @@ clean_pb_links
 repos=${a714_repo}
 clone_repos
 
-repos=`cat ./ansible714/ansible_dependencies.txt | grep -v -e '^#.*'`
+repos=$(cat ./ansible714/ansible_dependencies.txt | grep -v -e '^#.*')
 cd ./foreign/
 clone_repos
 cd ../
 
 recreate_links
 
-
 # get galaxy roles
 get_galaxy_roles
-
-

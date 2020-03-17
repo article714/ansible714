@@ -4,7 +4,7 @@
 #------------------------------------
 # Parameters, list of roles
 
-a714_repo='git@githu.com:article714/ansible714.git
+a714_repo='git@github.com:article714/ansible714.git
 '
 
 #------------------------------------

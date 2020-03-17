@@ -1,14 +1,6 @@
 #
 # Manage a Postgresql Server instance
 #
-- name: configure and deploy Postgresql
-  hosts: PgNodes
-  remote_user: root
-  become: true
-
-  roles:
-    - psql-server
-
 
 - name: Manage LXD-Nodes
   hosts: LXDNodes

@@ -3,13 +3,8 @@
       docker_image:
         name: "portainer/portainer"
         source: pull
-    
-    - name: Stop portainer
-      docker_container:
-        name: portainer
-        state: stopped
-    
-    - name: Stop portainer
+        
+    - name: Remove portainer
       docker_container:
         name: portainer
         state: absent

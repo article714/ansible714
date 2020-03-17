@@ -1,0 +1,7 @@
+- name: Configure and deploy docker administration tools
+  hosts: DockerNodes
+  remote_user: root
+  become: true
+
+  roles:
+    - docker-admin-tools

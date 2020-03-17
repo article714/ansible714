@@ -1,5 +1,5 @@
 #!/bin/bash
-# set -x
+set -x
 
 #------------------------------------
 # Parameters, list of roles
@@ -13,6 +13,12 @@ a714_repo='git@github.com:article714/ansible714.git
 
 clone_repos(){
   for r in ${repos}; do
+
+    url=`echo ${repos} | cut -f 1 -d ' ' -`
+    branch=`echo ${repos} | cut -f 2 -d ' ' -`
+
+    if [ "${url}" != "${branch}" ]; then
+    fi
 
     dir_name=$(echo ${r} | sed -E "s/(^.*)\:((.*)\/)*(.*)((\.git)|$)/\4/")
     if [ -d ${dir_name} ]; then

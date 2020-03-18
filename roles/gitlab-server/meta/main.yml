@@ -1,0 +1,27 @@
+galaxy_info:
+    author: L. Rondel
+    description: Manage gitlab server
+    company: Article714
+  
+    license: LGPL
+  
+    min_ansible_version: 2.4
+  
+    platforms:
+      - name: Ubuntu
+        versions:
+          - all
+      - name: Debian
+        versions:
+          - all
+  
+    galaxy_tags:
+      - system
+      - postgresql
+      - debian
+      - ubuntu
+  
+    dependencies:
+        - { role: 'debian-based-container', when: machine_type == 'lxd' }
+        - { role: 'debian-based-host', when: machine_type == 'host' }
+        - role: ansible-role-systemd-networkd

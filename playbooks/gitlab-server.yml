@@ -1,0 +1,26 @@
+- name: Manage LXD-Nodes
+  hosts: LXDNodes
+  remote_user: root
+  become: true
+  gather_facts: yes
+
+  tasks:
+    - name: LXD Node
+      include_role:
+        name: lxd-node
+      when: machine_type == 'host'
+
+  tags:
+    - host_config
+
+- name: Deploy gitlab server into lxc container
+  hosts: GitlabNodes
+  remote_user: root
+  become: true
+  gather_facts: yes
+
+  roles:
+    - gitlab-server
+
+  tags:
+    - gitlab_config

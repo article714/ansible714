@@ -1,0 +1,20 @@
+- name: Stop docker.service
+  systemd:
+    state: stopped
+    name: docker
+
+- name: Override docker conf
+  linefile:
+    path: lib/systemd/system/docker.service
+    insertafter: "^ExecStart=.*"
+    line: "-g /data/DockerData/"
+    firstmatch: yes
+    state: present
+
+- name: Reload daemon and docker.service
+  systemd:
+    state: restarted
+    daemon_reload: yes
+    name: docker
+  
+    

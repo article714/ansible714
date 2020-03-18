@@ -1,0 +1,9 @@
+-   name: Deploy and set HaProxy
+    hosts: devserv1
+    remote_user: root
+    become: true
+
+    roles:
+        - ha-proxy
+
+

@@ -1,0 +1,3 @@
+---
+- include: configure_apt.yml
+- include: instal_ha.yml

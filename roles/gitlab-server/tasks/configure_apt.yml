@@ -38,3 +38,12 @@
     name: gitlab-ce
     state: present
   when: not gitlab_file.stat.exists
+
+- name: Copy GitLab configuration file.
+  template:
+    src: "{{inventory_dir}}/files/{{inventory_hostname}}/gitlab/gitlab.rb"
+    dest: /etc/gitlab/gitlab.rb
+    owner: root
+    group: root
+    mode: 0600
+  notify: restart gitlab

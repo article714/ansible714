@@ -2,7 +2,7 @@
   hosts: LXDNodes
   remote_user: root
   become: true
-  gather_facts: yes
+  gather_facts: no
 
   tasks:
     - name: LXD Node
@@ -17,7 +17,11 @@
   hosts: GitlabNodes
   remote_user: root
   become: true
-  gather_facts: no
+  gather_facts: yes
+
+  pre_tasks:
+    - setup:
+      when: machine_type == "host"
 
   roles:
     - gitlab-server

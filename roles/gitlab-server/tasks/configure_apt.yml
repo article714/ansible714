@@ -6,6 +6,16 @@
   stat: path=/usr/bin/gitlab-ctl
   register: gitlab_file
 
+- name: Install GitLab dependencies.
+  package:
+    name:
+      - openssh-server
+      - postfix
+      - curl
+      - openssl
+      - tzdata
+    state: present
+
 - name: Install GitLab dependencies (Debian).
   apt:
     name: gnupg2

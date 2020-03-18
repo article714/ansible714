@@ -1,0 +1,8 @@
+# setup a basic nft firewall
+#
+
+- name: enable NFTables service
+  service:
+    name: nftables
+    state: enabled
+

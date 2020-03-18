@@ -21,3 +21,4 @@ netplan_io: false
 network_manager: false
 
 use_ufw: true
+use_nft: false

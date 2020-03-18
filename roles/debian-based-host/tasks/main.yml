@@ -6,4 +6,6 @@
 - include: sysconfig.yml
 - include: ufw_firewall.yml
   when: use_ufw
+- include: nft_firewall.yml
+  when: use_nft
 - include: update-dns.yml

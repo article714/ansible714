@@ -2,7 +2,9 @@
 #
 
 - name: enable NFTables service
-  service:
+  systemd:
     name: nftables
-    state: enabled
+    enabled: yes
+    masked: no
+
 

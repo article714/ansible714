@@ -8,3 +8,6 @@
     masked: no
 
 
+- include_role:
+  name: ipr-cnrs.nftables
+  

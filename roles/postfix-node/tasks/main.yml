@@ -1,6 +1,7 @@
 ---
 - include: dependencies.yml
-- include: firewall.yml
+- include: ufw_firewall.yml
+  when: use_ufw
 
 - name: setup DKIM socket to listen to
   lineinfile:

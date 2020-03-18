@@ -4,6 +4,7 @@
     msg: WE NEED TO PROVIDE A WAY TO SET UP DEFAULT STORAGE POOL FOR LXD
     # this requires lxd init and create a default pool then / or create a new profile
 
-- include: firewall.yml
+- include: ufw_firewall.yml
+  when: use_ufw
 - include: dependencies.yml
 - include: create_containers.yml

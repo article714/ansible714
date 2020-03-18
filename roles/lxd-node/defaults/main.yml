@@ -1,0 +1,4 @@
+---
+# defaults file for debian-based-host
+
+use_ufw: true

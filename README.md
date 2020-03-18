@@ -7,6 +7,10 @@ Cet outillage ne peut pas être utilisé en tant que tel mais doit être complé
 fichiers de configuration permettant de décrire l'infastructure sur la quelle les
 'recettes' s'appliquent.
 
+Certains des rôles utilisés ici sont largement inspirés, voire contiennent du code issus d'autres rôles Ansible, notamment:
+* le role *odoo-node* ré-utilise les templates et leur paramétrage venant de https://github.com/OCA/ansible-odoo (GPL-V3 license)
+
+
 ## Répertoire (dépôt) d'inventaire utilisant les recettes Ansible714
 
 ### Création d'un inventaire

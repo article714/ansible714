@@ -1,5 +1,8 @@
-- name: configure and deploy the docker on a node
-  hosts: DockerNodes
+#
+# This playbook is deprecated
+#
+- name: configure and deploy Proxmox on a node
+  hosts: ProxmoxNodes
   remote_user: root
   become: true
 

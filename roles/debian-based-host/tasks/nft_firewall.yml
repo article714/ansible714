@@ -1,0 +1,10 @@
+# setup a basic nft firewall
+#
+
+- name: enable NFTables service
+  systemd:
+    name: nftables
+    enabled: yes
+    masked: no
+
+

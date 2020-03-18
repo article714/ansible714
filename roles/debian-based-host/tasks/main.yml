@@ -4,5 +4,8 @@
 - include: filesystem.yml
 - include: private_key.yml
 - include: sysconfig.yml
-- include: firewall.yml
+- include: ufw_firewall.yml
+  when: use_ufw
+- include: nft_firewall.yml
+  when: use_nft
 - include: update-dns.yml

@@ -44,4 +44,4 @@
 
 - name: Set Up Firewall
   include: firewall.yml
-  when: machine_type == 'host'
+  when: machine_type == 'host' and use_ufw

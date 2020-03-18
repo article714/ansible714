@@ -8,6 +8,7 @@
     masked: no
 
 
-- include_role:
-  name: ipr-cnrs.nftables
+- name: apply NFTables role from IPR-CNRS
+  include_role:
+    name: ipr-cnrs.nftables
   

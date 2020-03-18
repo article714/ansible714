@@ -1,2 +1,3 @@
 ---
-- include: firewall.yml
+- include: ufw_firewall.yml
+  when: use_ufw

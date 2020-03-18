@@ -19,3 +19,6 @@ systemd_networkd_enable_resolved: true
 netplan_io: false
 
 network_manager: false
+
+use_ufw: true
+use_nft: false

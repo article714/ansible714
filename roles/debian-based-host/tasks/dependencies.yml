@@ -29,9 +29,15 @@
       - python3-systemd
       - python-pip
       - systemd
-      - ufw
     update_cache: yes
     state: latest
+
+
+- name: System dependencies (Firewall)
+  apt:
+    name:
+      - ufw
+  when: use_ufw
 
 - name: Netplan.io when needed
   apt:

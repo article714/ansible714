@@ -2,3 +2,5 @@
 # defaults file for postfix-node
 
 dkim_domains: []
+
+use_ufw: true

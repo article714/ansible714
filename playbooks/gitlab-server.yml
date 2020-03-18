@@ -17,7 +17,7 @@
   hosts: GitlabNodes
   remote_user: root
   become: true
-  gather_facts: yes
+  gather_facts: no
 
   roles:
     - gitlab-server

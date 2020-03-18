@@ -1,0 +1,13 @@
+---
+    - name: Apply settings
+      template:
+        src: inventory/files/{{inventory_hostname}}/ha/haproxy.cfg
+        dest: /etc/haproxy/haproxy.cfg
+        owner: root
+        group: root
+        mode: 0644
+    
+    - name: Restart HA
+      service:
+        name: haproxy
+        state: restarted

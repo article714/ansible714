@@ -17,16 +17,18 @@
   tags:
     - host_config
 
+- name: Deploy and setup HaProxy
+  hosts: HAProxyNodes
+  remote_user: root
+  become: true
+  gather_facts: yes
 
--   name: Deploy and setup HaProxy
-    hosts: HAProxyNodes
-    remote_user: root
-    become: true
-    gather_facts: no
+  pre_tasks:
+    - setup:
+      when: machine_type == "host"
 
-    roles:
-        - haproxy-node
+  roles:
+    - haproxy-node
 
-    tags:
-        - ha_config
-
+  tags:
+    - ha_config

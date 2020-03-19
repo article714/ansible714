@@ -1,0 +1,3 @@
+- name: apply apache-role
+  include_role:
+    name: geerlingguy.apache

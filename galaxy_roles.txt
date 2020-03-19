@@ -7,5 +7,6 @@
 #    done < galaxy_roles.txt
 #
 nginxinc.nginx
+geerlingguy.apache
 oefenweb.postfix
 ipr-cnrs.nftables

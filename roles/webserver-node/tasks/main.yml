@@ -2,6 +2,9 @@
 - include: apply_nginx.yml
   when: http_server_flavor == 'nginx'
 
+- include: apply_apache.yml
+  when: http_server_flavor == 'apache'
+
 - name: Setup Let's Encrypt account key
   copy:
     remote_src: no

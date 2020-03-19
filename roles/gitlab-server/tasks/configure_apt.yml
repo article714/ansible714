@@ -24,7 +24,7 @@
 
 - name: Download GitLab repository installation script.
   get_url:
-    url: "https://packages.gitlab.com/install/repositories/gitlab/ce/script.deb.sh"
+    url: "https://packages.gitlab.com/install/repositories/gitlab/gitlab-ce/script.deb.sh"
     dest: /tmp/gitlab_install_repository.sh
   when: not gitlab_file.stat.exists
 

@@ -1,9 +1,32 @@
--   name: Deploy and set HaProxy
+#
+# Manage a HaProxy Server instance
+#
+
+- name: Manage LXD-Nodes
+  hosts: LXDNodes
+  remote_user: root
+  become: true
+  gather_facts: yes
+
+  tasks:
+    - name: LXD Node
+      include_role:
+        name: lxd-node
+      when: machine_type == 'host'
+
+  tags:
+    - host_config
+
+
+-   name: Deploy and setup HaProxy
     hosts: HAProxyNodes
     remote_user: root
     become: true
+    gather_facts: no
 
     roles:
         - haproxy-node
 
+    tags:
+        - ha_config
 

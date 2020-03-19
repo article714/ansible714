@@ -13,6 +13,24 @@
   tags:
     - host_config
 
+- name: Set sysctl to workarround gitlab issue
+  hosts: devserv1
+  remote_user: root
+  become: true
+
+  tasks:
+    - name: workarround sysctl issue (1)
+      sysctl:
+        name: kernel.shmall
+        value: 4194304
+        state: present
+
+    - name: workarround sysctl issue (2)
+      sysctl:
+        name: kernel.shmmax
+        value: 17179869184
+        state: present
+
 - name: Deploy gitlab server into lxc container
   hosts: GitlabNodes
   remote_user: root

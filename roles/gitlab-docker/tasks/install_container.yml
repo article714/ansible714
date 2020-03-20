@@ -40,6 +40,7 @@
   docker_container:
     image: gitlab/gitlab-ce:latest
     name: gitlab
+    hostname: "{{ GITLAB_HOSTNAME | default(omit) }}"
     recreate: yes
     ports:
       - "8080:80"

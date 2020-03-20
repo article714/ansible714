@@ -1,6 +1,6 @@
 galaxy_info:
-  author: C. Guychard <christophe@article714.org>, L. Rondel 
-  description: Manage HA-Proxy instances 
+  author: C. Guychard <christophe@article714.org>, L. Rondel
+  description: Manage HA-Proxy instances
   company: Article714
 
   license: LGPL
@@ -25,4 +25,5 @@ galaxy_info:
 dependencies:
   - { role: 'debian-based-container', when: machine_type == 'lxd' }
   - { role: 'debian-based-host', when: machine_type == 'host' }
+  - role: ansible-role-systemd-networkd
   - role: 'letsencrypt-node'

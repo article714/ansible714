@@ -1,0 +1,54 @@
+# RETRIEVE VOLUMES STATUS
+- name: Check volumes (gitlab_log)
+  docker_volume_info:
+    name: gitlab_log
+  register: gitlab_log_exist
+
+- name: Check volumes (gitlab_opt)
+  docker_volume_info:
+    name: gitlab_opt
+  register: gitlab_opt_exist
+                
+- name: Check volumes (gitlab_etc)
+  docker_volume_info:
+    name: gitlab_etc
+  register: gitlab_etc_exist
+
+# CREATE VOLUMES IF NECESSARY
+- name: Create gitlab_opt volume (optional)
+  docker_volume:
+    name: gitlab_opt
+  when: gitlab_opt_exist.exists
+
+- name: Create gitlab_etc volume (optional)
+  docker_volume:
+    name: gitlab_etc
+  when: gitlab_etc_exist.exists
+
+- name: Create gitlab_log volume (optional)
+  docker_volume:
+    name: gitlab_log
+  when: gitlab_log_exist.exists
+  
+# DEPLOY CONTAINER
+- name: Remove container if exist
+  docker_container:
+    name: gitlab
+    state: absent
+
+- name: Deploy gitlab in docker container
+  docker_container:
+    image: gitlab/gitlab-ce:latest
+    name: gitlab
+    recreate: yes
+    ports:
+      - "8080:80"
+    exposed_ports:
+      - 22
+      - 443
+    volumes:
+      - gitlab_log:/var/log/gitlab
+      - gitlab_opt:/var/opt/gitlab
+      - gitlab_etc:/etc/gitlab
+    
+

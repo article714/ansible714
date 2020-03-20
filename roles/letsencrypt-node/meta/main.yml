@@ -20,11 +20,7 @@ galaxy_info:
     - webserver
     - apache
     - nginx
+    - haproxy
     - debian
     - ubuntu
 
-dependencies:
-  - { role: 'debian-based-container', when: machine_type == 'lxd' }
-  - { role: 'debian-based-host', when: machine_type == 'host' }
-  - role: ansible-role-systemd-networkd
-  - role: 'letsencrypt-node'

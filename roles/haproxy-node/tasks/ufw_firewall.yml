@@ -1,0 +1,28 @@
+---
+- name: Update firewall rules (TCP) --> forwarded
+  ufw:
+    rule: '{{ item.rule }}'
+    port: '{{ item.port }}'
+    proto: tcp
+    interface: '{{ main_network_if }}'
+    direction: '{{ item.dir }}'
+    route: yes
+  with_items:
+    - { 'port': 'http', 'dir': 'in', 'rule': 'allow' }
+    - { 'port': 'https', 'dir': 'in', 'rule': 'allow' }
+  when: main_if_is_bridged
+
+- name: Update firewall rules (TCP)
+  ufw:
+    rule: '{{ item.rule }}'
+    port: '{{ item.port }}'
+    proto: tcp
+    interface: '{{ main_network_if }}'
+    direction: '{{ item.dir }}'
+  with_items:
+    - { 'port': 'http', 'dir': 'in', 'rule': 'allow' }
+    - { 'port': 'https', 'dir': 'in', 'rule': 'allow' }
+
+- name: Reload Firewall
+  ufw:
+    state: reloaded

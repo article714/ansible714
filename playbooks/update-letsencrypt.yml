@@ -1,12 +1,12 @@
 # Update any letsencrypt certificate
 #
 - name: Update Let's Encrypt certificates
-  hosts: WebserverNodes
+  hosts: WebserverNodes:HAProxyNodes
   remote_user: root
   become: true
 
   roles:
-    - webserver-node
+    - letsencrypt-node
 
   tasks:
     - name: refresh DNS @ OVH

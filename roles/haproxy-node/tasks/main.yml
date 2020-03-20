@@ -1,3 +1,9 @@
 ---
+
 - include: configure_apt.yml
+
 - include: install_ha.yml
+
+- name: Set Up Firewall
+  include: ufw_firewall.yml
+  when: machine_type == 'host' and use_ufw

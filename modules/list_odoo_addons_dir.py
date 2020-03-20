@@ -1,6 +1,6 @@
 #!/usr/bin/python
 
-# Copyright: (c) 2019, C. Guychard <guychard.2609@article714.org>
+# Copyright: (c) 2019, C. Guychard <christophe@article714.org>
 
 ANSIBLE_METADATA = {
     "metadata_version": "1.1",

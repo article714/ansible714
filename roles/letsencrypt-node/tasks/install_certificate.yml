@@ -70,3 +70,7 @@
         state: link
         dest: '/etc/letsencrypt/live/{{ item.item.dname }}/fullchain.pem'
         src: '../../archive/{{ item.item.dname }}/fullchain.pem'
+
+- name: Install Complete Certificate file (fullchain+privkey)
+  raw: 'cat /etc/letsencrypt/live/{{ item.item.dname }}/fullchain.pem  /etc/letsencrypt/live/{{ item.item.dname }}/privkey.pem > /etc/letsencrypt/live/{{ item.item.dname }}.pem' 
+  

@@ -50,9 +50,8 @@
   when: not gitlab_file.stat.exists
 
 - name: Check protect-links.conf state
-  stat:
-    path: etc/systctl.d/protect-links.conf
-    register: protect_links_file
+  stat: path=etc/systctl.d/protect-links.conf
+  register: protect_links_file
 
 - name: Disable protect-links.conf container file
   command: mv etc/systctl.d/protect-links.conf etc/systctl.d/protect-links.conf.SAVE

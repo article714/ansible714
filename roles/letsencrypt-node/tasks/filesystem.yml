@@ -12,3 +12,29 @@
     - 'live'
     - 'archive'
   when: letsencrypt_enable|bool
+
+- name: Create ansible /etc/ansible/letsencrypt directory
+  file:
+    path: '/etc/ansible/{{ item }}'
+    owner: root
+    group: root
+    mode: '0700'
+    state: directory
+  with_items:
+    - 'letsencrypt'
+    - 'keys'
+  when: letsencrypt_enable|bool
+
+- name: Create letsencrypt dir layout in /etc/ansible
+  file:
+    path: '/etc/ansible/letsencrypt/{{ item }}'
+    owner: root
+    group: root
+    mode: '0700'
+    state: directory
+  with_items:
+    - 'csr'
+    - 'certs'
+    - 'keys'
+    - 'account'
+  when: letsencrypt_enable|bool

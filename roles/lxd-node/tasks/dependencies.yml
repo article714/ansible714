@@ -25,15 +25,15 @@
 
 - name: install LXD
   command: snap install lxd
-  when: refresh_lxd|bool
+  when: refresh_lxd
 
 - name: refresh LXD
   command: snap refresh lxd
-  when: refresh_lxd|bool
+  when: refresh_lxd
 
 - name: (re)start LXD
   command: snap restart lxd
-  when: refresh_lxd|bool
+  when: refresh_lxd
 
 - name: wait a bit so that everything is up and running
   wait_for:
@@ -41,4 +41,4 @@
   delegate_to: localhost
   run_once: true
   become: false
-  when: refresh_lxd|bool
+  when: refresh_lxd

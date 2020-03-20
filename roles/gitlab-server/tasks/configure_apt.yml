@@ -49,6 +49,15 @@
     state: present
   when: not gitlab_file.stat.exists
 
+- name: Check protect-links.conf state
+  stat:
+    path: etc/systctl.d/protect-links.conf
+    register: protect_links_file
+
+- name: Disable protect-links.conf container file
+  command: mv etc/systctl.d/protect-links.conf etc/systctl.d/protect-links.conf.SAVE
+  when: protect_links_file.stat.exists
+
 # Start and configure GitLab. Sometimes the first run fails, but after that,
 # restarts fix problems, so ignore failures on this run.
 - name: Reconfigure GitLab (first run).

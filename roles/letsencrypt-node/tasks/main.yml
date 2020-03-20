@@ -20,7 +20,7 @@
     state: present
     terms_agreed: yes
     contact:
-      - mailto: '{{ ACME_ACCOUNT_EMAIL }}'
+      - 'mailto:{{ ACME_ACCOUNT_EMAIL }}'
   when: letsencrypt_enable|bool
 
 - name: Check certificates date

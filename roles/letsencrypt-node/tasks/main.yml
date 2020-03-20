@@ -1,5 +1,7 @@
 ---
 
+- include: filesystem.yml
+
 - name: Setup Let's Encrypt account key
   copy:
     remote_src: no
@@ -20,8 +22,6 @@
     contact:
       - mailto: '{{ ACME_ACCOUNT_EMAIL }}'
   when: letsencrypt_enable|bool
-
-- include: filesystem.yml
 
 - name: Check certificates date
   stat:

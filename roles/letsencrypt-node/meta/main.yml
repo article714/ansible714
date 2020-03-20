@@ -1,6 +1,6 @@
 galaxy_info:
   author: C. Guychard <christophe@article714.org>
-  description: Manage Webserver node
+  description: Manage Let's encrypt Certificates
   company: Article714
 
   license: LGPL

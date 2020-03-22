@@ -8,7 +8,21 @@
       docker_container:
         name: portainer
         state: absent
+
+    # RETRIEVE VOLUMES STATUS
+    - name: Check volumes (portainer_data)
+      docker_volume_info:
+        name: portainer_data
+      register: portainer_data_exist
+
+    # CREATE VOLUMES IF NECESSARY
+    - name: Create portainer_data volume 
+      docker_volume:
+        name: portainer_data
+      when: portainer_data_exist.exists
+
   
+    # INSTALL PORTAINER
     - name: Install Portainer.io
       docker_container:
         name: portainer
@@ -17,5 +31,9 @@
             - /var/run/docker.sock:/var/run/docker.sock
             - portainer_data:/data portainer/portainer
         ports:
-            - "9000:9000"
-            - "8000:8000"
+            - "{{docker_portainer_port_9000}}:9000"
+            - "{{docker_portainer_port_8000}}:8000"
+        state: started
+        restart_policy: always
+        recreate: yes
+

@@ -1,0 +1,5 @@
+---
+# defaults file for debian-based-container
+
+docker_portainer_port_9000: 9000
+docker_portainer_port_8000: 8000

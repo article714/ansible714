@@ -29,7 +29,7 @@
         image: portainer/portainer
         volumes:
             - /var/run/docker.sock:/var/run/docker.sock
-            - portainer_data:/data portainer/portainer
+            - portainer_data:/data
         ports:
             - "{{docker_portainer_port_9000}}:9000"
             - "{{docker_portainer_port_8000}}:8000"

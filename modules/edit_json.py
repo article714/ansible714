@@ -69,14 +69,14 @@ def main():
             if os.access(filename, os.W_OK):
                 if os.stat(filename).st_size > 0:
                     # parse file only if not empty
-                    f= open("filename", "r")
+                    f= open(filename, "r")
                     res = json.load(f)
                     f.close()
                 res.update(updates)
                 for k in deletes:
                     res.delete(k)
                 
-                f= open("filename", "w")
+                f= open(filename, "w")
                 f.write(json.dumps(res))
 
                 module.exit_json(changed=True,

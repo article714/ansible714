@@ -67,9 +67,11 @@ def main():
         if os.path.exists(filename) and (os.path.isfile(filename)):
             res={}
             if os.access(filename, os.W_OK):
-                f= open("filename", "r")
-                res = json.load(f)
-                f.close()
+                if os.stat(filename).st_size > 0:
+                    # parse file only if not empty
+                    f= open("filename", "r")
+                    res = json.load(f)
+                    f.close()
                 res.update(updates)
                 for k in deletes:
                     res.delete(k)

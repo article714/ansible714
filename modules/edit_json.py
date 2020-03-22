@@ -72,9 +72,11 @@ def main():
                     f= open(filename, "r")
                     res = json.load(f)
                     f.close()
-                res.update(updates)
-                for k in deletes:
-                    res.delete(k)
+                if updates is not None:
+                    res.update(updates)
+                if deletes is not None:
+                    for k in deletes:
+                        res.delete(k)
                 
                 f= open(filename, "w")
                 f.write(json.dumps(res))

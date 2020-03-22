@@ -51,5 +51,8 @@
       - gitlab_log:/var/log/gitlab
       - gitlab_opt:/var/opt/gitlab
       - gitlab_etc:/etc/gitlab
+    state: started
+    restart_policy: always
+    recreate: yes
     
 

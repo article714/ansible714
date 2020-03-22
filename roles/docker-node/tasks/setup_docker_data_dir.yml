@@ -3,13 +3,13 @@
     state: stopped
     name: docker
 
-- name: Override docker conf for docker data dir
-  lineinfile:
-    path: /lib/systemd/system/docker.service
-    insertafter: '^ExecStart=.*'
-    line: '-g {{ docker_data_dir}}'
-    firstmatch: yes
-    state: present
+- name: Creates empty daemin.json file if it does not exist
+  file:
+    path: /etc/docker/daemon.json
+    state: touch
+    owner: root
+    group: root
+    mode: 0644
 
 - name: Override docker conf for docker data dir
   edit_json:

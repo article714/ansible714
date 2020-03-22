@@ -7,8 +7,14 @@
     enabled: yes
     masked: no
 
+- name: copy Custom NFT files
+  copy:
+    src: "{{ inventory_dir }}/files/{{ inventory_hostname }}/nftables/"
+    dest: "/etc/nftables.d/"
+    owner: gitlab-runner
+    group: gitlab-runner
+    mode: '0770'
 
 - name: apply NFTables role from IPR-CNRS
   include_role:
     name: ipr-cnrs.nftables
-  

@@ -1,21 +1,48 @@
-- name: configure and deploy the Gitlab On LXC on a node
-  hosts: GitlabNodes
+- name: Manage LXD-Nodes
+  hosts: LXDNodes
+  remote_user: root
+  become: true
+  gather_facts: yes
+
+  tasks:
+    - name: LXD Node
+      include_role:
+        name: lxd-node
+      when: machine_type == 'host'
+
+  tags:
+    - host_config
+
+- name: Set sysctl to workarround gitlab issue
+  hosts: devserv1
   remote_user: root
   become: true
 
-  roles:
-    - lxd-node
   tasks:
-    - name: Create GitLab container
-      lxc_container:
-        name: gitlab-container
-        backing_store: dir
-        directory: /var/lib/docker/LXC/gitlab
-        container_log: true
-        template: debian
-        template_options: --release buster --arch amd64
-        state: started
-        archive: false
-        archive_compression: none
-        container_config:
-          - 'lxc.cgroup.devices.allow=a *:* rmw'
+    - name: workarround sysctl issue (1)
+      sysctl:
+        name: kernel.shmall
+        value: 4194304
+        state: present
+
+    - name: workarround sysctl issue (2)
+      sysctl:
+        name: kernel.shmmax
+        value: 17179869184
+        state: present
+
+- name: Deploy gitlab server into lxc container
+  hosts: GitlabInLXDNodes
+  remote_user: root
+  become: true
+  gather_facts: no
+
+  pre_tasks:
+    - setup:
+      when: machine_type == "host"
+
+  roles:
+    - gitlab-server
+
+  tags:
+    - gitlab_config

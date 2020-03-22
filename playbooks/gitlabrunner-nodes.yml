@@ -1,5 +1,5 @@
 - name: configure and deploy gitlab-runner on a node
-  hosts: gitlabrunners
+  hosts: GitlabrunnerNode
   remote_user: root
   become: true
 

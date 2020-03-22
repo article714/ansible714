@@ -1,0 +1,4 @@
+---
+# defaults file for debian-based-container
+
+docker_data_dir: /var/lib/docker

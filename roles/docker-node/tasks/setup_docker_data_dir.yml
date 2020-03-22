@@ -3,18 +3,22 @@
     state: stopped
     name: docker
 
-- name: Override docker conf
-  linefile:
-    path: lib/systemd/system/docker.service
-    insertafter: "^ExecStart=.*"
-    line: "-g /data/DockerData/"
+- name: Override docker conf for docker data dir
+  lineinfile:
+    path: /lib/systemd/system/docker.service
+    insertafter: '^ExecStart=.*'
+    line: '-g {{ docker_data_dir}}'
     firstmatch: yes
     state: present
+
+- name: Override docker conf for docker data dir
+  edit_json:
+    file: /etc/docker/daemon.json
+    updates:
+      data-root: '{{ docker_data_dir }}'
 
 - name: Reload daemon and docker.service
   systemd:
     state: restarted
     daemon_reload: yes
     name: docker
-  
-    

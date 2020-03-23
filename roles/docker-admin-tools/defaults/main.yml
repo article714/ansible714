@@ -1,5 +1,5 @@
 ---
-# defaults file for debian-based-container
+# defaults file for docker admin tools
 
 docker_portainer_port_9000: 9000
 docker_portainer_port_8000: 8000

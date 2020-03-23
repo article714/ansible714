@@ -43,9 +43,9 @@
     hostname: "{{ GITLAB_HOSTNAME | default(omit) }}"
     recreate: yes
     ports:
-      - "8080:80"
+      - "{{docker_gitlab_port_80}}:80"
+      - "{{docker_gitlab_port_22}}:22"
     exposed_ports:
-      - 22
       - 443
     volumes:
       - gitlab_log:/var/log/gitlab

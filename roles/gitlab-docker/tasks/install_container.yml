@@ -53,6 +53,5 @@
       - gitlab_etc:/etc/gitlab
     state: started
     restart_policy: always
-    recreate: yes
     
 

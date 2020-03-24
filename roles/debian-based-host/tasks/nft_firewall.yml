@@ -11,9 +11,9 @@
   copy:
     src: "{{ inventory_dir }}/files/{{ inventory_hostname }}/nftables/"
     dest: "/etc/nftables.d/"
-    owner: gitlab-runner
-    group: gitlab-runner
-    mode: '0770'
+    owner: root
+    group: root
+    mode: '0644'
 
 - name: apply NFTables role from IPR-CNRS
   include_role:

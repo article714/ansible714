@@ -22,4 +22,6 @@ galaxy_info:
     - ubuntu
 
 dependencies:
-  - role: debian-based-host
+  - { role: 'debian-based-container', when: machine_type == 'lxd' }
+  - { role: 'debian-based-host', when: machine_type == 'host' }
+  - role: ansible-role-systemd-networkd

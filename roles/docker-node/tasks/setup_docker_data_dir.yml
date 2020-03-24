@@ -3,7 +3,7 @@
     state: stopped
     name: docker
 
-- name: Creates empty daemin.json file if it does not exist
+- name: Creates empty daemon.json file if it does not exist
   file:
     path: /etc/docker/daemon.json
     state: touch

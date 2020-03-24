@@ -4,6 +4,8 @@
     name: '{{item.name}}'
     state: started
     ephemeral: no
+    config:
+      security.privileged: "{{item.privileged | default(false) }}"
     source:
       type: image
       mode: pull

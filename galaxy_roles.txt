@@ -6,6 +6,8 @@
 #      fi
 #    done < galaxy_roles.txt
 #
+# WARNING: the file must end with an empty line
+#
 nginxinc.nginx
 geerlingguy.apache
 oefenweb.postfix

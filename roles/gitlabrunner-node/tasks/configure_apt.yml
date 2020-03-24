@@ -6,5 +6,5 @@
 
 - name: Add Gitlab CE repository
   apt_repository:
-    repo: 'deb [arch=amd64]  https://packages.gitlab.com/runner/gitlab-runner/{{ ansible_distribution|lower }}/ {{ ansible_distribution_release }} stable'
+    repo: 'deb [arch=amd64]  https://packages.gitlab.com/runner/gitlab-runner/{{ ansible_distribution|lower }}/ {{ ansible_distribution_release }} main'
     state: present

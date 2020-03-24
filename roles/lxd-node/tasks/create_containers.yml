@@ -6,6 +6,7 @@
     ephemeral: no
     config:
       security.privileged: "{{item.privileged | default(false) }}"
+      security.nesting: "{{item.nesting | default(false) }}"
     source:
       type: image
       mode: pull

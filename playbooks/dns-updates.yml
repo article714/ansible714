@@ -4,8 +4,6 @@
   hosts: DebianNodes
   become: false
 
-  roles:
-    - debian-based-host
 
   tasks:
     - name: Create DNS entries At OVH

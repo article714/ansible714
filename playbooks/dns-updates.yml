@@ -30,7 +30,8 @@
         application_secret: '{{ OVH_APPLICATION_SECRET }}'
         consumer_key: '{{ OVH_CONSUMER_KEY }}'
         service: dns
-        domain: '{{ item.item.zone }}'
+        domain: '{{ item }}'
         name: refresh
       delegate_to: 127.0.0.1
+      with_items: "{{ dns_entries | items2dict(key_name='name', value_name='zone' |  map(attribute='zone')  | unique}}"
       become: no

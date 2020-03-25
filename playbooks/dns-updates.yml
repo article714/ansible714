@@ -3,6 +3,7 @@
 - name: Update DNS records
   hosts: DebianNodes
   become: false
+  gather_facts: no
 
 
   tasks:
@@ -33,5 +34,5 @@
         domain: '{{ item }}'
         name: refresh
       delegate_to: 127.0.0.1
-      with_items: "{{ dns_entries | items2dict(key_name='name', value_name='zone' |  map(attribute='zone')  | unique}}"
+      with_items: "{{ dns_entries | map(attribute='zone')  | unique }}"
       become: no

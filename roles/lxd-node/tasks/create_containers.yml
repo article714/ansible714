@@ -1,12 +1,12 @@
 ---
-- name: Create a LXD containers (with mac-addr)
+- name: Create a LXD containers
   lxd_container:
     name: '{{item.name}}'
     state: started
     ephemeral: no
     config:
-      security.privileged: "{{item.privileged | default(false) }}"
-      security.nesting: "{{item.nesting | default(false) }}"
+      security.privileged: '{{item.privileged | default(false) }}'
+      security.nesting: '{{item.nesting | default(false) }}'
     source:
       type: image
       mode: pull
@@ -15,7 +15,7 @@
       alias: '{{ item.image_alias }}'
     devices:
       eth0:
-        hwaddr: '{{ item.mac_address }}'
+        hwaddr: '{{ item.mac_address | default(omit) }}'
         name: 'eth0'
         nictype: 'bridged'
         parent: '{{ item.container_bridge }}'
@@ -24,9 +24,9 @@
     wait_for_ipv4_addresses: false
     timeout: 120
   with_items: '{{ lxd_containers }}'
-  when: item.mac_address is defined
+  when: item.container_private_bridge is not defined
 
-- name: Create a LXD containers (without mac-addr)
+- name: Create a LXD containers (2 ethernet interfaces public/private)
   lxd_container:
     name: '{{item.name}}'
     state: started
@@ -39,16 +39,22 @@
       alias: '{{ item.image_alias }}'
     devices:
       eth0:
-        hwaddr:
+        hwaddr: '{{ item.mac_address | default(omit) }}'
         name: 'eth0'
         nictype: 'bridged'
         parent: '{{ item.container_bridge }}'
+        type: 'nic'
+      eth1:
+        hwaddr: '{{ item.private_mac_address | default(omit) }}'
+        name: 'eth1'
+        nictype: 'bridged'
+        parent: '{{ item.container_private_bridge }}'
         type: 'nic'
     profiles: ['default']
     wait_for_ipv4_addresses: false
     timeout: 120
   with_items: '{{ lxd_containers }}'
-  when: item.mac_address is not defined
+  when: item.container_private_bridge is defined
 
 - name: check Systemd-Networkd Status
   delegate_to: '{{item.name}}'

@@ -1,0 +1,11 @@
+- name: Create docker networks
+  docker_network:
+    name: '{{ item.name }}'
+    driver: '{{ item.driver | default(omit) }}'
+    driver_options:
+      com.docker.network.bridge.name: '{{ item.bridge_name | default(omit) }}'
+    ipam_config:
+      - subnet: '{{ item.subnet | default(omit) }}'
+        gateway: '{{ item.gateway | default(omit) }}'
+        iprange: '{{ item.iprange | default(omit) }}'
+  with_items: '{{ docker_networks }}'

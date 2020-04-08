@@ -4,24 +4,6 @@
   become: true
 
   tasks:
-    - name: Create certificare /etc directory layout
-      file:
-        path: '/etc/certificare'
-        owner: 3000
-        group: root
-        mode: '0750'
-        state: directory
-
-    - name: Copy config files
-      copy:
-        src: '{{inventory_dir}}/files/{{inventory_hostname}}/config/{{ item.config_file | default(omit) }}'
-        dest: '/etc/certificare/{{ item.config_file | default(omit) }}'
-        owner: 3000
-        group: root
-        mode: 0640
-      when: item.config_file | default(False)
-      with_items: '{{ DOCKERIZED_APPS }}'
-
     - name: Pull API Docker image
       docker_image:
         name: '{{ CERTIFICARE_REGISTRY }}/{{ item.image_name }}'

@@ -1,0 +1,44 @@
+- name: Configure and deploy dockerized apps
+  hosts: DockerNodes
+  remote_user: root
+  become: true
+
+  tasks:
+    - name: Create certificare /etc directory layout
+      file:
+        path: '/etc/certificare'
+        owner: 3000
+        group: root
+        mode: '0750'
+        state: directory
+
+    - name: Copy config files
+      copy:
+        src: '{{inventory_dir}}/files/{{inventory_hostname}}/config/{{ item.config_file | default(omit) }}'
+        dest: '/etc/certificare/{{ item.config_file | default(omit) }}'
+        owner: 3000
+        group: root
+        mode: 0640
+      when: item.config_file | default(False)
+      with_items: '{{ DOCKERIZED_APPS }}'
+
+    - name: Pull API Docker image
+      docker_image:
+        name: '{{ CERTIFICARE_REGISTRY }}/{{ item.image_name }}'
+        source: pull
+        force: yes
+        state: present
+      with_items: '{{ DOCKERIZED_APPS }}'
+
+    - name: Deploy containers
+      docker_container:
+        name: '{{ item.name}}'
+        image: '{{ CERTIFICARE_REGISTRY }}/{{ item.image_name }}'
+        volumes: '{{ item.volumes }}'
+        networks:
+          - name: '{{ item.container_network }}'
+            ipv4_address: '{{ item.container_ip }}'
+        state: started
+        restart_policy: always
+        recreate: yes
+      with_items: '{{ DOCKERIZED_APPS }}'

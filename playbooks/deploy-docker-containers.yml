@@ -16,10 +16,10 @@
       docker_container:
         name: '{{ item.name}}'
         image: '{{ DOCKER_REGISTRY }}/{{ item.image_name }}'
-        volumes: '{{ item.volumes }}'
+        volumes: '{{ item.volumes | default(omit) }}'
         networks:
           - name: '{{ item.container_network }}'
-            ipv4_address: '{{ item.container_ip }}'
+            ipv4_address: '{{ item.container_ip | default(omit)}}'
         state: started
         restart_policy: always
         recreate: yes

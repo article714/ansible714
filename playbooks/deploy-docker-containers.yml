@@ -6,7 +6,7 @@
   tasks:
     - name: Pull API Docker image
       docker_image:
-        name: '{{ CERTIFICARE_REGISTRY }}/{{ item.image_name }}'
+        name: '{{ DOCKER_REGISTRY }}/{{ item.image_name }}'
         source: pull
         force: yes
         state: present
@@ -15,7 +15,7 @@
     - name: Deploy containers
       docker_container:
         name: '{{ item.name}}'
-        image: '{{ CERTIFICARE_REGISTRY }}/{{ item.image_name }}'
+        image: '{{ DOCKER_REGISTRY }}/{{ item.image_name }}'
         volumes: '{{ item.volumes }}'
         networks:
           - name: '{{ item.container_network }}'

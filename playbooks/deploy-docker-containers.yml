@@ -17,6 +17,7 @@
         name: '{{ item.name}}'
         image: '{{ DOCKER_REGISTRY }}/{{ item.image_name }}'
         volumes: '{{ item.volumes | default(omit) }}'
+        env: '{{ item.environment | default(omit) }}'
         networks:
           - name: '{{ item.container_network }}'
             ipv4_address: '{{ item.container_ip | default(omit)}}'

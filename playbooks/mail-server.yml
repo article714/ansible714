@@ -31,3 +31,19 @@
 
   tags:
     - mail_config
+
+- name: DoveCot (IMAP) Server Management
+  hosts: ImapNodes
+  remote_user: root
+  become: true
+  gather_facts: no
+
+  pre_tasks:
+    - setup:
+      when: machine_type == "host"
+
+  roles:
+    - dovecot-node
+
+  tags:
+    - imap_config

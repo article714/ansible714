@@ -1,0 +1,11 @@
+---
+- name: Software dependencies
+  apt:
+    name:
+      - dovecot-imapd
+      - dovecot-ldap
+      - dovecot-lmtpd
+      - dovecot-sieve
+      - dovecot-antispam
+    update_cache: yes
+    state: latest

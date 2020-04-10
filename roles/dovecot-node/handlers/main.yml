@@ -1,0 +1,6 @@
+# May have some handlers one day
+
+- name: ReStart DoveCot
+  service:
+    name: dovecot
+    state: restarted

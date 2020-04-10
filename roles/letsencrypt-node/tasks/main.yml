@@ -1,5 +1,4 @@
 ---
-
 - include: filesystem.yml
 
 - name: Setup Let's Encrypt account key
@@ -11,6 +10,14 @@
     backup: no
     src: '{{ ACME_ACCOUNT_KEY.from }}'
     dest: '{{ ACME_ACCOUNT_KEY.to }}'
+
+- name: Ensure we can communicate with ACME server
+  get_url:
+    url: https://acme-v02.api.letsencrypt.org/directory
+    dest: /tmp/acme_dir.html
+    mode: '0440'
+  retries: 3
+  delay: 15
 
 - name: Ensure Let's Encrypt account exists
   acme_account:

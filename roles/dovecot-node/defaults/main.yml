@@ -1,0 +1,4 @@
+---
+# defaults file for postfix-node
+
+use_ufw: true

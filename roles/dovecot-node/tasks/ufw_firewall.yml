@@ -1,0 +1,30 @@
+---
+- name: Update firewall rules (TCP) --> forwarded
+  ufw:
+    rule: '{{ item.rule }}'
+    port: '{{ item.port }}'
+    proto: tcp
+    interface: '{{ main_network_if }}'
+    direction: '{{ item.dir }}'
+    route: yes
+  with_items:
+    - { 'port': 'imap', 'dir': 'in', 'rule': 'allow' }
+    - { 'port': 'imap', 'dir': 'out', 'rule': 'allow' }
+  when: main_if_is_bridged and machine_type == 'host'
+
+- name: Update firewall rules (TCP)
+  ufw:
+    rule: '{{ item.rule }}'
+    port: '{{ item.port }}'
+    proto: tcp
+    interface: '{{ main_network_if }}'
+    direction: '{{ item.dir }}'
+  when: machine_type == 'host'
+  with_items:
+    - { 'port': 'imap', 'dir': 'in', 'rule': 'limit' }
+    - { 'port': 'imap', 'dir': 'out', 'rule': 'allow' }
+
+- name: Reload Firewall
+  ufw:
+    state: reloaded
+  when: machine_type == 'host'

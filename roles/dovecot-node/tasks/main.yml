@@ -1,0 +1,9 @@
+---
+- include: dependencies.yml
+- include: ufw_firewall.yml
+  when: use_ufw
+
+- name: (re)start DoveCot
+  systemd:
+    state: restarted
+    name: dovecot

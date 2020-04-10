@@ -17,7 +17,7 @@
     dest: /tmp/acme_dir.html
     mode: '0440'
   retries: 3
-  delay: 15
+  delay: 60
 
 - name: Ensure Let's Encrypt account exists
   acme_account:

@@ -6,19 +6,33 @@
   tasks:
     - name: Pull API Docker image
       docker_image:
-        name: '{{ DOCKER_REGISTRY }}/{{ item.image_name }}'
+        name: "{{ item.docker_registry | default('docker.io') }}/{{ item.image_name }}"
         source: pull
         force: yes
         force_source: yes
         state: present
       with_items: '{{ DOCKERIZED_APPS }}'
 
+    - name: Check if needed containers exist
+      docker_volume_info:
+        name: "{{ item.split(':')[0] }}"
+      register: volumes_status
+      when: not item.startswith('/') | default(False)
+      with_items: "{{ DOCKERIZED_APPS | map(attribute='volumes') | list }}"
+
+    - name: Create needed containers
+      docker_volume:
+        name: "{{ item.item.split(':')[0] }}"
+      when: not (item.exists | default(True))
+      with_items: '{{ volumes_status.results }}'
+
     - name: Deploy containers
       docker_container:
         name: '{{ item.name}}'
-        image: '{{ DOCKER_REGISTRY }}/{{ item.image_name }}'
+        image: "{{ item.docker_registry | default('docker.io') }}/{{ item.image_name }}"
         volumes: '{{ item.volumes | default(omit) }}'
         env: '{{ item.environment | default(omit) }}'
+        command: '{{ item.command | default(omit) }}'
         purge_networks: yes
         networks:
           - name: '{{ item.container_network }}'

@@ -3,6 +3,10 @@
   remote_user: root
   become: true
 
+  roles:
+    - ansible-role-systemd-networkd
+    - debian-based-host
+
   tasks:
     - name: Update Software for Debian hosts
       apt:

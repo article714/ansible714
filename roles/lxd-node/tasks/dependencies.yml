@@ -23,6 +23,10 @@
     state: started
     name: snapd
 
+- name: install SNAP Core
+  command: snap install core
+  when: refresh_lxd
+
 - name: install LXD
   command: snap install lxd
   when: refresh_lxd

@@ -4,7 +4,7 @@
   become: true
 
   tasks:
-    - name: Pull API Docker image
+    - name: Pull Docker images
       docker_image:
         name: "{{ item.docker_registry | default('docker.io') }}/{{ item.image_name }}"
         source: pull

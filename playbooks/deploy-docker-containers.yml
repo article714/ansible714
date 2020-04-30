@@ -11,7 +11,7 @@
         force: yes
         force_source: yes
         state: present
-      when: not item.image_local | default(True)
+      when: (not item.image_local) | default(True)
       with_items: '{{ DOCKERIZED_APPS }}'
 
     - name: Check if needed volumes exist
@@ -44,7 +44,7 @@
         state: started
         restart_policy: always
         recreate: yes
-      when: not item.image_local | default(True)
+      when: (not item.image_local) | default(True)
       with_items: '{{ DOCKERIZED_APPS }}'
 
     - name: Deploy containers

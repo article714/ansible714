@@ -11,6 +11,7 @@
         force: yes
         force_source: yes
         state: present
+      when: not item.image_local | default(True)
       with_items: '{{ DOCKERIZED_APPS }}'
 
     - name: Check if needed volumes exist
@@ -43,4 +44,25 @@
         state: started
         restart_policy: always
         recreate: yes
+      when: not item.image_local | default(True)
+      with_items: '{{ DOCKERIZED_APPS }}'
+
+    - name: Deploy containers
+      docker_container:
+        name: '{{ item.name}}'
+        image: '{{ item.image_name }}'
+        volumes: '{{ item.volumes | default(omit) }}'
+        env: '{{ item.environment | default(omit) }}'
+        command: '{{ item.command | default(omit) }}'
+        hostname: '{{ item.hostname | default(omit) }}'
+        ports: '{{ item.ports | default(omit) }}'
+        exposed_ports: '{{ item.exposed_ports | default(omit) }}'
+        purge_networks: yes
+        networks:
+          - name: '{{ item.container_network }}'
+            ipv4_address: '{{ item.container_ip | default(omit)}}'
+        state: started
+        restart_policy: always
+        recreate: yes
+      when: item.image_local | default(False)
       with_items: '{{ DOCKERIZED_APPS }}'

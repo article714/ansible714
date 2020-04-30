@@ -17,6 +17,13 @@
     updates:
       data-root: '{{ docker_data_dir }}'
 
+- name: Override docker conf for docker DNS on bridge network
+  edit_json:
+    file: /etc/docker/daemon.json
+    updates:
+      dns: '{{ docker_default_dns }}'
+  when: docker_default_dns
+
 - name: Reload daemon and docker.service
   systemd:
     state: restarted

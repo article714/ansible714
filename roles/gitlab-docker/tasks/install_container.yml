@@ -1,35 +1,35 @@
 # RETRIEVE VOLUMES STATUS
 - name: Check volumes (gitlab_log)
   docker_volume_info:
-    name: gitlab_log
+    name: "gitlab_log_${gitlab_image_tag}"
   register: gitlab_log_exist
 
 - name: Check volumes (gitlab_opt)
   docker_volume_info:
-    name: gitlab_opt
+    name: "gitlab_opt_${gitlab_image_tag}"
   register: gitlab_opt_exist
-                
+
 - name: Check volumes (gitlab_etc)
   docker_volume_info:
-    name: gitlab_etc
+    name: "gitlab_etc_${gitlab_image_tag}"
   register: gitlab_etc_exist
 
 # CREATE VOLUMES IF NECESSARY
 - name: Create gitlab_opt volume (optional)
   docker_volume:
-    name: gitlab_opt
+    name: "gitlab_opt_${gitlab_image_tag}"
   when: gitlab_opt_exist.exists
 
 - name: Create gitlab_etc volume (optional)
   docker_volume:
-    name: gitlab_etc
+    name: "gitlab_etc_${gitlab_image_tag}"
   when: gitlab_etc_exist.exists
 
 - name: Create gitlab_log volume (optional)
   docker_volume:
-    name: gitlab_log
+    name: "gitlab_log_${gitlab_image_tag}"
   when: gitlab_log_exist.exists
-  
+
 # DEPLOY CONTAINER
 - name: Remove container if exist
   docker_container:
@@ -38,7 +38,8 @@
 
 - name: Deploy gitlab in docker container
   docker_container:
-    image: gitlab/gitlab-ce:latest
+    # le tag de l'image docker est passée en parametre de la ligen de commande ex. --extra-vars "gitlab_image_tag=12.10.3-ce.0"
+    image: "gitlab/gitlab-ce:${gitlab_image_tag}"
     name: gitlab
     hostname: "{{ GITLAB_HOSTNAME | default(omit) }}"
     recreate: yes
@@ -53,5 +54,5 @@
       - gitlab_etc:/etc/gitlab
     state: started
     restart_policy: always
-    
+
 

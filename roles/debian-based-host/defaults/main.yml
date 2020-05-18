@@ -3,7 +3,7 @@
 
 custom_ssh_port: 22
 
-machine_type: 'host'
+machine_type: "host"
 
 main_if_is_bridged: false
 
@@ -22,3 +22,5 @@ network_manager: false
 
 use_ufw: true
 use_nft: false
+
+dns_entries: []

@@ -3,7 +3,7 @@
 
 custom_ssh_port: 22
 
-machine_type: 'lxd'
+machine_type: "lxd"
 
 main_if_is_bridged: false
 
@@ -19,3 +19,8 @@ systemd_networkd_enable_resolved: true
 netplan_io: false
 
 network_manager: false
+
+use_ufw: false
+use_nft: false
+
+dns_entries: []

@@ -4,4 +4,19 @@
 
 - name: configure hostname
   hostname:
-    name: '{{ host_name }}'
+    name: "{{ host_name }}"
+
+- name: check Systemd-Networkd Status
+  command: "systemctl status systemd-networkd"
+  register: systemd_networkd_status
+  failed_when: systemd_networkd_status.rc not in [0, 1, 3]
+  changed_when: false
+
+- name: save /etc/network/interfaces
+  command: cp /etc/network/interfaces /etc/network/interfaces.save
+  when: systemd_networkd_status.rc != 0
+
+- name: comment out systemd networks from /etc/network/interfaces
+  command: "perl -pi -e  's/^([^#])(.*{{ item.key }}.*)$/# $1$2/' /etc/network/interfaces"
+  when: systemd_networkd_status.rc != 0
+  loop: "{{ lookup('dict', systemd_networkd_network) }}"

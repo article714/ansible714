@@ -32,12 +32,17 @@
     update_cache: yes
     state: latest
 
-
 - name: System dependencies (Firewall)
   apt:
     name:
       - ufw
   when: use_ufw
+
+- name: System dependencies (Firewall)
+  apt:
+    name:
+      - nftables
+  when: use_nft
 
 - name: Netplan.io when needed
   apt:

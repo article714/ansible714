@@ -2,7 +2,10 @@
   service:
     name: docker
     state: started
+  listen: "Start Docker"
+
 - name: ReStart Docker
   service:
     name: docker
     state: restarted
+  listen: "ReStart Docker"

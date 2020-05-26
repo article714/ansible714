@@ -16,3 +16,15 @@
       include_role:
         name: ansible-role-systemd-networkd
       when: machine_type == 'host'
+
+- name: Restart services (Docker)
+  hosts: DockerNodes
+  remote_user: root
+  become: true
+  gather_facts: yes
+
+  tasks:
+    - name: ReStart Docker
+      service:
+        name: docker
+        state: restarted

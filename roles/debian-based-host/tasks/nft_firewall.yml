@@ -13,8 +13,9 @@
     dest: "/etc/nftables.d/"
     owner: root
     group: root
-    mode: '0644'
+    mode: "0644"
 
 - name: apply NFTables role from IPR-CNRS
   include_role:
     name: ipr-cnrs.nftables
+  notify: ReStart Docker

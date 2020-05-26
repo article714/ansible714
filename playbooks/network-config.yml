@@ -4,5 +4,18 @@
   become: true
 
   roles:
-    - ansible-role-systemd-networkd
-    - debian-based-host
+    -
+
+  tasks:
+    - name: Apply system config (LXD)
+      include_role:
+        name: debian-based-container
+      when: machine_type == 'lxd'
+    - name: Apply system config (Host)
+      include_role:
+        name: debian-based-host
+      when: machine_type == 'host'
+    - name: Apply network config
+      include_role:
+        name: ansible-role-systemd-networkd
+      when: machine_type == 'host'

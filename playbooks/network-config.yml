@@ -3,9 +3,6 @@
   remote_user: root
   become: true
 
-  roles:
-    -
-
   tasks:
     - name: Apply system config (LXD)
       include_role:

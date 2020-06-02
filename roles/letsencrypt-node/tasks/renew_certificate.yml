@@ -42,9 +42,12 @@
 
 - name: Copy Challenge file
   copy:
-    dest: "{{letsencrypt_wellknown_dir}}/{{ item.key }}/{{ item.value['http-01']['resource'] }}"
-    content: "{{ item.value['http-01']['resource_value'] }}"
+    dest: "{{letsencrypt_wellknown_dir}}/{{ myitem[1]['http-01']['resource'] }}"
+    content: "{{ myitem[1]['http-01']['resource_value'] }}"
+    mode: "644"
   loop: "{{ running_challenge.challenge_data | dictsort }}"
+  loop_control:
+    loop_var: myitem
   when: letsencrypt_challenge == 'http-01' and running_challenge.challenge_data
 
 - name: refresh DNS At OVH (LocalHost)

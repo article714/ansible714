@@ -1,57 +1,64 @@
 ---
 - debug:
-    msg: 'Renewing or creating for {{ item.item.dname }}'
+    msg: "Renewing or creating for {{ item.item.dname }}"
 
 - name: Generate an OpenSSL private key for current request
   openssl_privatekey:
-    path: '/etc/ansible/letsencrypt/keys/{{ item.item.dname }}_key.pem'
+    path: "/etc/ansible/letsencrypt/keys/{{ item.item.dname }}_key.pem"
     size: 4096
 
 - name: Generate an OpenSSL Certificate Signing Request
   openssl_csr:
-    path: '/etc/ansible/letsencrypt/csr/running_challenge_{{ item.item.dname }}.csr'
-    privatekey_path: '/etc/ansible/letsencrypt/keys/{{ item.item.dname }}_key.pem'
-    common_name: '{{ item.item.dname }}'
+    path: "/etc/ansible/letsencrypt/csr/running_challenge_{{ item.item.dname }}.csr"
+    privatekey_path: "/etc/ansible/letsencrypt/keys/{{ item.item.dname }}_key.pem"
+    common_name: "{{ item.item.dname }}"
 
 - name: Create a challenge for {{ item.item.dname }} using a account key file.
   acme_certificate:
-    challenge: dns-01
+    challenge: "{{ letsencrypt_challenge }}"
     acme_version: 2
     acme_directory: https://acme-v02.api.letsencrypt.org/directory
-    account_key_src: '{{ ACME_ACCOUNT_KEY.to }}'
-    csr: '/etc/ansible/letsencrypt/csr/running_challenge_{{ item.item.dname }}.csr'
-    dest: '/etc/ansible/letsencrypt/certs/{{ item.item.dname }}.crt'
+    account_key_src: "{{ ACME_ACCOUNT_KEY.to }}"
+    csr: "/etc/ansible/letsencrypt/csr/running_challenge_{{ item.item.dname }}.csr"
+    dest: "/etc/ansible/letsencrypt/certs/{{ item.item.dname }}.crt"
     modify_account: no
   register: running_challenge
 
 - name: Create TXT entry for challenge At OVH
   ovh:
-    endpoint: 'ovh-eu'
-    application_key: '{{ OVH_APPLICATION_KEY }}'
-    application_secret: '{{ OVH_APPLICATION_SECRET }}'
-    consumer_key: '{{ OVH_CONSUMER_KEY }}'
+    endpoint: "ovh-eu"
+    application_key: "{{ OVH_APPLICATION_KEY }}"
+    application_secret: "{{ OVH_APPLICATION_SECRET }}"
+    consumer_key: "{{ OVH_CONSUMER_KEY }}"
     service: dns
     name: "{{ running_challenge.challenge_data[item.item.dname]['dns-01'].record.replace('.{}'.format(item.item.zone),'') }}"
     txt: "{{ running_challenge.challenge_data[item.item.dname]['dns-01'].resource_value }}"
-    domain: '{{ item.item.zone }}'
+    domain: "{{ item.item.zone }}"
     state: modified
     create: yes
   delegate_to: 127.0.0.1
-  when: running_challenge.challenge_data
+  when: letsencrypt_challenge = 'dns-01' and running_challenge.challenge_data
   become: no
+
+- name: Copy Challenge file
+  copy:
+    dest: "{{letsencrypt_wellknown_dir}}/{{ item.key }}/{{ item.value['http-01']['resource'] }}"
+    content: "{{ item.value['http-01']['resource_value'] }}"
+  loop: "{{ running_challenge.challenge_data | dictsort }}"
+  when: letsencrypt_challenge = 'http-01' and running_challenge.challenge_data
 
 - name: refresh DNS At OVH (LocalHost)
   ovh:
-    endpoint: 'ovh-eu'
-    application_key: '{{ OVH_APPLICATION_KEY }}'
-    application_secret: '{{ OVH_APPLICATION_SECRET }}'
-    consumer_key: '{{ OVH_CONSUMER_KEY }}'
+    endpoint: "ovh-eu"
+    application_key: "{{ OVH_APPLICATION_KEY }}"
+    application_secret: "{{ OVH_APPLICATION_SECRET }}"
+    consumer_key: "{{ OVH_CONSUMER_KEY }}"
     service: dns
-    domain: '{{ item }}'
+    domain: "{{ item }}"
     name: refresh
   with_items: "{{ dns_entries | map(attribute='zone')  | unique }}"
   delegate_to: 127.0.0.1
-  when: running_challenge.challenge_data
+  when: letsencrypt_challenge = 'dns-01' and running_challenge.challenge_data
   become: no
 
 - name: Wait a few seconds to let DNS(es) update/sync
@@ -64,15 +71,15 @@
 - name: Challenge validated and retrieve the certs
   acme_certificate:
     acme_version: 2
-    account_key_src: '{{ ACME_ACCOUNT_KEY.to }}'
-    src: '/etc/ansible/letsencrypt/csr/running_challenge_{{ item.item.dname }}.csr'
-    cert: '/etc/ansible/letsencrypt/certs/{{ item.item.dname }}_cert.pem'
-    fullchain: '/etc/ansible/letsencrypt/certs/{{ item.item.dname }}_fullchain.pem'
-    chain: '/etc/ansible/letsencrypt/certs/{{ item.item.dname }}_chain.pem'
-    challenge: dns-01
+    account_key_src: "{{ ACME_ACCOUNT_KEY.to }}"
+    src: "/etc/ansible/letsencrypt/csr/running_challenge_{{ item.item.dname }}.csr"
+    cert: "/etc/ansible/letsencrypt/certs/{{ item.item.dname }}_cert.pem"
+    fullchain: "/etc/ansible/letsencrypt/certs/{{ item.item.dname }}_fullchain.pem"
+    chain: "/etc/ansible/letsencrypt/certs/{{ item.item.dname }}_chain.pem"
+    challenge: "{{ letsencrypt_challenge }}"
     acme_directory: https://acme-v02.api.letsencrypt.org/directory
     remaining_days: 60
-    data: '{{ running_challenge }}'
+    data: "{{ running_challenge }}"
   when: running_challenge is changed
 
 - include: install_certificate.yml

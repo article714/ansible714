@@ -37,7 +37,7 @@
     state: modified
     create: yes
   delegate_to: 127.0.0.1
-  when: letsencrypt_challenge = 'dns-01' and running_challenge.challenge_data
+  when: letsencrypt_challenge == 'dns-01' and running_challenge.challenge_data
   become: no
 
 - name: Copy Challenge file
@@ -45,7 +45,7 @@
     dest: "{{letsencrypt_wellknown_dir}}/{{ item.key }}/{{ item.value['http-01']['resource'] }}"
     content: "{{ item.value['http-01']['resource_value'] }}"
   loop: "{{ running_challenge.challenge_data | dictsort }}"
-  when: letsencrypt_challenge = 'http-01' and running_challenge.challenge_data
+  when: letsencrypt_challenge == 'http-01' and running_challenge.challenge_data
 
 - name: refresh DNS At OVH (LocalHost)
   ovh:
@@ -58,7 +58,7 @@
     name: refresh
   with_items: "{{ dns_entries | map(attribute='zone')  | unique }}"
   delegate_to: 127.0.0.1
-  when: letsencrypt_challenge = 'dns-01' and running_challenge.challenge_data
+  when: letsencrypt_challenge == 'dns-01' and running_challenge.challenge_data
   become: no
 
 - name: Wait a few seconds to let DNS(es) update/sync

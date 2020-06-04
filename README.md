@@ -8,8 +8,8 @@ fichiers de configuration permettant de décrire l'infastructure sur la quelle l
 'recettes' s'appliquent.
 
 Certains des rôles utilisés ici sont largement inspirés, voire contiennent du code issus d'autres rôles Ansible, notamment:
-* le role *odoo-node* ré-utilise les templates et leur paramétrage venant de https://github.com/OCA/ansible-odoo (GPL-V3 license)
 
+- le role _odoo-node_ ré-utilise les templates et leur paramétrage venant de https://github.com/OCA/ansible-odoo (GPL-V3 license)
 
 ## Répertoire (dépôt) d'inventaire utilisant les recettes Ansible714
 
@@ -42,15 +42,18 @@ Dans le répertoire de l'inventaire:
 
    ```shell
    workon ansible
+   # dépendances d'exécution
    pip install --upgrade -r requirements.txt
+   # dépendances pour le développement
+   pip install --upgrade -r requirements_dev.txt
    ```
 
-   Le fichier _requirements.txt_ se trouve à la racine du dépôt
+   Les fichiers _requirementss.txt_ se trouve à la racine du dépôt
 
 4. Initialisation des modules _foreign_ et des modules _galaxy_ qu'on utilise dans les scripts
 
    ```shell
-   ./init_all_roles.sh
+   ./scripts/init_all_roles.sh
    ```
 
 5. On teste si le tout fonctionne

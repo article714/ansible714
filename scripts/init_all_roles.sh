@@ -4,7 +4,7 @@
 #------------------------------------
 # Parameters, list of roles
 
-if [ "$1" = "NO_A714_CLONE"]; then
+if [ "$1" = "NO_A714_CLONE" ]; then
     a714_repo=''
 else
     a714_repo='git@github.com:article714/ansible714.git

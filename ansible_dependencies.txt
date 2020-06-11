@@ -1,5 +1,5 @@
 
 # list of remote/foreign git repository from which we import 
 # roles/modules,....
-git@github.com:article714/infra-ovh-ansible-module.git+ansible714
-git@github.com:aruhier/ansible-role-systemd-networkd.git
+https://github.com/article714/infra-ovh-ansible-module.git+ansible714
+https://github.com/aruhier/ansible-role-systemd-networkd.git

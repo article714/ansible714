@@ -1,4 +1,5 @@
 # To use the roles and playbooks defined in this repository,
 # you also need to install the following Python packages
 ansible
+docker
 ovh

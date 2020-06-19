@@ -50,6 +50,7 @@
 
     - name: Deploy containers
       docker_container:
+        docker_host: "{{ DOCKER_HOST | default('unix://var/run/docker.sock') }}"
         name: '{{ item.name}}'
         image: '{{ item.image_name }}'
         volumes: '{{ item.volumes | default(omit) }}'

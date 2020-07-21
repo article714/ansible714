@@ -1,0 +1,7 @@
+- name: Configure and deploy gravitee api managment in docker container
+  hosts: ansible_host
+  remote_user: root
+  become: true
+
+  roles:
+    - gravitee-apim-docker

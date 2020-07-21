@@ -1,0 +1,17 @@
+# DEPLOY API GATEWAY (main api management component)
+- name: Remove gateway container if exist
+  docker_container:
+    name: gravitee-api-gw
+    state: absent
+
+- name: Deploy gitlab in docker container
+  docker_container:
+        image: "graviteeio/gateway:latest"
+        name: gravitee-api-gw
+        recreate: yes
+        ports:
+        - "{{GATEWAY_PORT}}:8082"
+        exposed_ports:
+        - 82
+        state: started
+        restart_policy: always

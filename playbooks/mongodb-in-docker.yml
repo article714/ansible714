@@ -1,0 +1,7 @@
+- name: Configure and deploy mongodb in docker container
+  # hosts: TODO: je ne connais pas l'hote certificare
+  remote_user: root
+  become: true
+
+  roles:
+    - mongodb-in-docker

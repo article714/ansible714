@@ -1,5 +1,5 @@
 - name: Configure and deploy mongodb in docker container
-  # hosts: TODO: je ne connais pas l'hote certificare
+  hosts: ansible_host
   remote_user: root
   become: true
 

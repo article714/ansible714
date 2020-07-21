@@ -6,7 +6,7 @@
 
 - name: Deploy gitlab in docker container
   docker_container:
-    image: "gitlab/gitlab-ce:${gitlab_image_tag}"
+    image: "mongo:latest"
     name: gravitee-mongodb
     recreate: yes
     ports:

@@ -45,6 +45,7 @@
         networks:
           - name: "{{ item.container_network }}"
             ipv4_address: "{{ item.container_ip | default(omit)}}"
+        capabilities: "{{ item.capabilities | default(omit) }}"
         state: started
         restart_policy: always
         recreate: yes
@@ -66,6 +67,7 @@
         networks:
           - name: "{{ item.container_network }}"
             ipv4_address: "{{ item.container_ip | default(omit)}}"
+        capabilities: "{{ item.capabilities | default(omit) }}"
         state: started
         restart_policy: always
         recreate: yes

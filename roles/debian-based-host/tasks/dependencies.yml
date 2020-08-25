@@ -31,6 +31,27 @@
       - systemd
     update_cache: yes
     state: latest
+  when: ansible_os_family == 'Debian' and ansible_distribution_major_version < '20'
+
+- name: System dependencies
+  apt:
+    name:
+      - aptitude
+      - bridge-utils
+      - etckeeper
+      - fail2ban
+      - iptables
+      - libuser
+      - net-tools
+      - openssh-server
+      - python3
+      - python3-pip
+      - python3-systemd
+      - python-pip-whl
+      - systemd
+    update_cache: yes
+    state: latest
+  when: ansible_os_family == 'Debian' and ansible_distribution_major_version > '19'
 
 - name: System dependencies (Firewall)
   apt:

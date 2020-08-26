@@ -48,7 +48,7 @@
         capabilities: "{{ item.capabilities | default(omit) }}"
         state: started
         restart_policy: always
-        recreate: "{{ item.recreate | default(yes) }}"
+        recreate: "{{ item.recreate | default('yes') }}"
       when: not ( item.image_local | default(False) )
       with_items: "{{ DOCKERIZED_APPS }}"
 
@@ -70,6 +70,6 @@
         capabilities: "{{ item.capabilities | default(omit) }}"
         state: started
         restart_policy: always
-        recreate: "{{ item.recreate | default(yes) }}"
+        recreate: "{{ item.recreate | default('yes') }}"
       when: item.image_local | default(False)
       with_items: "{{ DOCKERIZED_APPS }}"

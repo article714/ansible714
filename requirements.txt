@@ -2,4 +2,6 @@
 # you also need to install the following Python packages
 ansible
 docker
+hvac
+async-hvac
 ovh

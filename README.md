@@ -11,6 +11,8 @@ Certains des rôles utilisés ici sont largement inspirés, voire contiennent du
 
 - le role _odoo-node_ ré-utilise les templates et leur paramétrage venant de https://github.com/OCA/ansible-odoo (GPL-V3 license)
 
+Un complément de documentation se trouve dans le répertoire [documentation](documentation/index.md).
+
 ## Mise en oeuvre d'Ansible sur une machine d'admin
 
 En suivant les étapes ci-desssous, on obtient un répertoire contenant les éléments nécessaires à l'exécution des playbooks du projet Ansible714.

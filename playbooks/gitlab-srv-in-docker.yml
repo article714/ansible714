@@ -1,7 +1,0 @@
-- name: Configure and deploy gitlab in docker container
-  hosts: GitlabInDockerNodes
-  remote_user: root
-  become: true
-
-  roles:
-    - gitlab-docker

@@ -51,25 +51,25 @@ from ansible.module_utils.basic import AnsibleModule
 def main():
     module = AnsibleModule(
         argument_spec=dict(
-            file=dict(type='str', required=True),
-            updates=dict(type='dict'),
-            deletes=dict(type='list'),
+            file=dict(type="str", required=True),
+            updates=dict(type="dict"),
+            deletes=dict(type="list"),
         ),
         supports_check_mode=True,
     )
-    filename = module.params['file']
-    updates = module.params['updates']
-    deletes = module.params['deletes']
+    filename = module.params["file"]
+    updates = module.params["updates"]
+    deletes = module.params["deletes"]
 
     result = dict(changed=False, data={})
 
     if isinstance(filename, str):
         if os.path.exists(filename) and (os.path.isfile(filename)):
-            res={}
+            res = {}
             if os.access(filename, os.W_OK):
                 if os.stat(filename).st_size > 0:
                     # parse file only if not empty
-                    f= open(filename, "r")
+                    f = open(filename, "r")
                     res = json.load(f)
                     f.close()
                 if updates is not None:
@@ -77,12 +77,11 @@ def main():
                 if deletes is not None:
                     for k in deletes:
                         res.delete(k)
-                
-                f= open(filename, "w")
+
+                f = open(filename, "w")
                 f.write(json.dumps(res))
 
-                module.exit_json(changed=True,
-                     result=res)
+                module.exit_json(changed=True, result=res)
 
             else:
                 module.fail_json(msg="Cannot write to file %s" % filename, **result)
@@ -92,6 +91,5 @@ def main():
         module.fail_json(msg="Cannot parse filename: %s" % filename, **result)
 
 
-
-if __name__ == '__main__':
+if __name__ == "__main__":
     main()

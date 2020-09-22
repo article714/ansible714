@@ -1,4 +1,0 @@
----
-    # defaults file for mongodb in docker
-    
-    mongo_port: 27017

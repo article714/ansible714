@@ -1,5 +1,0 @@
----
-# defaults file for gitlab in docker
-
-docker_gitlab_port_80: 8080
-docker_gitlab_port_22: 2222

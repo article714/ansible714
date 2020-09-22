@@ -1,4 +1,0 @@
----
-    # defaults file for gravitee in docker
-
-    GATEWAY_PORT: 82

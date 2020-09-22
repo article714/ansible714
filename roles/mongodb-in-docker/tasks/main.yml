@@ -1,3 +1,0 @@
----
-    - include: check_volumes.yml
-    # - include: deploy_container.yml

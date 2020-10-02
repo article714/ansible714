@@ -32,3 +32,9 @@
         name: nginx
         state: restarted
       when: http_server_flavor == "nginx"
+
+    - name: reload haproxy
+      service:
+        name: haproxy
+        state: restarted
+      when: http_server_flavor == "haproxy"

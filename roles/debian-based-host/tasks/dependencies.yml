@@ -27,7 +27,6 @@
       - python3
       - python3-pip
       - python3-systemd
-      - python-pip
       - systemd
     update_cache: yes
     state: latest
@@ -47,7 +46,6 @@
       - python3
       - python3-pip
       - python3-systemd
-      - python-pip-whl
       - systemd
     update_cache: yes
     state: latest

@@ -1,5 +1,7 @@
 # Recettes Ansible pour Article714
 
+**AVERTISSEMENT: cet outillage n'est plus compatible avec python2**
+
 Ce dépôt contient l'ensemble de l'outillage d'administration Article714,
 sur base [Ansible](http//ansible.com)
 

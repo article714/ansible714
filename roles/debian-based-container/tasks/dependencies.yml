@@ -21,7 +21,6 @@
       - python3-systemd
       - python
       - python-openssl
-      - python-pip
       - rsyslog
       - systemd
     update_cache: yes

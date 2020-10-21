@@ -5,7 +5,7 @@
 - name: configure hostname
   hostname:
     name: "{{ host_name }}"
-  when: "{{ host_name != '' | default(false) }}"
+  when: "{{ host_name | default(false) }}"
 
 - name: check Systemd-Networkd Status
   command: "systemctl status systemd-networkd"

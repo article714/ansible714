@@ -7,6 +7,13 @@
     enabled: yes
     masked: no
 
+- name: check Custom NFT files exists
+  local_action: 
+    stat:
+      path: "{{ inventory_dir }}/files/{{ inventory_hostname }}/nftables/"
+  register: nft_custom_files
+
+
 - name: copy Custom NFT files
   copy:
     src: "{{ inventory_dir }}/files/{{ inventory_hostname }}/nftables/"
@@ -14,6 +21,7 @@
     owner: root
     group: root
     mode: "0644"
+  when: nft_custom_files.stat.exists
 
 - name: apply NFTables role from IPR-CNRS
   include_role:

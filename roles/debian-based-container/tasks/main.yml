@@ -7,4 +7,4 @@
 - name: configure hostname and domain name
   hostname:
     name: '{{ host_name }}'
-  when: "{{ host_name | default(false) }}"
+  when: "host_name | default(false)"

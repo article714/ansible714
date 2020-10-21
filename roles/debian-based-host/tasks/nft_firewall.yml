@@ -8,10 +8,10 @@
     masked: no
 
 - name: check Custom NFT files exists
-  local_action: 
-    stat:
-      path: "{{ inventory_dir }}/files/{{ inventory_hostname }}/nftables/"
+  stat:
+    path: "{{ inventory_dir }}/files/{{ inventory_hostname }}/nftables/"
   register: nft_custom_files
+  delegate_to: 127.0.0.1
 
 
 - name: copy Custom NFT files

@@ -1,0 +1,71 @@
+- name: Pull Docker images
+  docker_image:
+    docker_host: "{{ DOCKER_HOST | default('unix://var/run/docker.sock') }}"
+    name: "{{ item.docker_registry | default('docker.io') }}/{{ item.image_name }}"
+    source: pull
+    force: yes
+    force_source: yes
+    state: present
+  when: not ( item.image_local | default(False) )
+  with_items: "{{ DOCKERIZED_APPS }}"
+
+- name: Check if needed volumes exist
+  docker_volume_info:
+    docker_host: "{{ DOCKER_HOST | default('unix://var/run/docker.sock') }}"
+    name: "{{ item.split(':')[0] }}"
+  register: volumes_status
+  when: not item.startswith('/') | default(False)
+  with_items: "{{ DOCKERIZED_APPS | map(attribute='volumes') | list }}"
+
+- name: Create needed volumes
+  docker_volume:
+    docker_host: "{{ DOCKER_HOST | default('unix://var/run/docker.sock') }}"
+    name: "{{ item.item.split(':')[0] }}"
+  when: not (item.exists | default(True))
+  with_items: "{{ volumes_status.results }}"
+
+- name: Deploy containers
+  docker_container:
+    docker_host: "{{ DOCKER_HOST | default('unix://var/run/docker.sock') }}"
+    name: "{{ item.name}}"
+    image: "{{ item.docker_registry | default('docker.io') }}/{{ item.image_name }}"
+    volumes: "{{ item.volumes | default(omit) }}"
+    env: "{{ item.environment | default(omit) }}"
+    command: "{{ item.command | default(omit) }}"
+    hostname: "{{ item.hostname | default(omit) }}"
+    ports: "{{ item.ports | default(omit) }}"
+    exposed_ports: "{{ item.exposed_ports | default(omit) }}"
+    purge_networks: yes
+    networks:
+      - name: "{{ item.container_network }}"
+        ipv4_address: "{{ item.container_ip | default(omit)}}"
+    dns_servers: "{{ item.dns | default(omit) }}"
+    capabilities: "{{ item.capabilities | default(omit) }}"
+    state: started
+    restart_policy: always
+    recreate: "{{ item.recreate | default('yes') }}"
+  when: not ( item.image_local | default(False) )
+  with_items: "{{ DOCKERIZED_APPS }}"
+
+- name: Deploy containers
+  docker_container:
+    docker_host: "{{ DOCKER_HOST | default('unix://var/run/docker.sock') }}"
+    name: "{{ item.name}}"
+    image: "{{ item.image_name }}"
+    volumes: "{{ item.volumes | default(omit) }}"
+    env: "{{ item.environment | default(omit) }}"
+    command: "{{ item.command | default(omit) }}"
+    hostname: "{{ item.hostname | default(omit) }}"
+    ports: "{{ item.ports | default(omit) }}"
+    exposed_ports: "{{ item.exposed_ports | default(omit) }}"
+    purge_networks: yes
+    networks:
+      - name: "{{ item.container_network }}"
+        ipv4_address: "{{ item.container_ip | default(omit)}}"
+    dns_servers: "{{ item.dns | default(omit) }}"
+    capabilities: "{{ item.capabilities | default(omit) }}"
+    state: started
+    restart_policy: always
+    recreate: "{{ item.recreate | default('yes') }}"
+  when: item.image_local | default(False)
+  with_items: "{{ DOCKERIZED_APPS }}"

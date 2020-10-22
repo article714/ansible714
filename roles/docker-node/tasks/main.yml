@@ -3,3 +3,4 @@
 - include: install_docker.yml
 - include: setup_docker_data_dir.yml
 - include: deploy_networks.yml
+- include: deploy_containers.yml

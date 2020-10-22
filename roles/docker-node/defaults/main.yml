@@ -3,4 +3,5 @@
 
 docker_data_dir: /var/lib/docker
 docker_networks: []
+DOCKERIZED_APPS: []
 docker_default_dns: false

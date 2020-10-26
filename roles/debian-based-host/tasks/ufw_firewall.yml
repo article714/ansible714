@@ -7,12 +7,12 @@
 #   ufw  allow out proto tcp from any to any port 8080
 #   ufw  allow proto tcp from any to any port 8080
 
-- name: reset Firewall rules
+- name: UFW -> reset Firewall rules
   ufw:
     state: reset
   when: reset_firewall
 
-- name: Init firewall TCP rules default deny
+- name: UFW -> Init firewall TCP rules default deny
   ufw:
     default: deny
     direction: '{{ item }}'
@@ -20,7 +20,7 @@
     - 'outgoing'
     - 'incoming'
 
-- name: Init firewall TCP rules default deny (routed)
+- name: UFW -> Init firewall TCP rules default deny (routed)
   ufw:
     default: deny
     direction: 'routed'
@@ -28,7 +28,7 @@
     - 'routed'
   when: routing_enabled|bool
 
-- name: allow outgoing forwarding when main_if is bridged
+- name: UFW -> allow outgoing forwarding when main_if is bridged
   ufw:
     default: allow
     direction: '{{ item }}'
@@ -37,7 +37,7 @@
     - 'outgoing'
   when: main_if_is_bridged|bool and main_network_if != "any" and routing_enabled|bool
 
-- name: Init firewall rules -> DNS, NTP (allow out on all interfaces, any protocol)
+- name: UFW -> Init firewall rules -> DNS, NTP (allow out on all interfaces, any protocol)
   ufw:
     rule: '{{ item.rule }}'
     port: '{{ item.port }}'
@@ -46,7 +46,7 @@
     - { 'port': '53', 'dir': 'out', 'rule': 'allow' }
     - { 'port': '123', 'dir': 'out', 'rule': 'allow' }
 
-- name: Init firewall TCP rules (SSH, http) --> Forward/routed
+- name: UFW -> Init firewall TCP rules (SSH, http) --> Forward/routed
   ufw:
     rule: '{{ item.rule }}'
     port: '{{ item.port }}'
@@ -66,7 +66,7 @@
     - { 'port': 'https', 'dir': 'out', 'rule': 'allow' }
   when: main_if_is_bridged|bool and main_network_if != "any"
 
-- name: Init firewall UDP rules (DNS, NTP) --> Forward/routed
+- name: UFW -> Init firewall UDP rules (DNS, NTP) --> Forward/routed
   ufw:
     rule: '{{ item.rule }}'
     port: '{{ item.port }}'
@@ -83,7 +83,7 @@
     - { 'port': '5353', 'dir': 'out', 'rule': 'allow' }
   when: main_if_is_bridged|bool and main_network_if != "any"
 
-- name: Init firewall TCP rules (SSH, http) --> standards
+- name: UFW -> Init firewall TCP rules (SSH, http) --> standards (specific IF)
   ufw:
     rule: '{{ item.rule }}'
     port: '{{ item.port }}'
@@ -97,7 +97,7 @@
     - { 'port': 'https', 'dir': 'out', 'rule': 'allow' }
   when: main_network_if != "any"
 
-- name: Init firewall TCP rules (SSH, http) --> standards
+- name: UFW -> Init firewall TCP rules (SSH, http) --> standards (any IF)
   ufw:
     rule: '{{ item.rule }}'
     port: '{{ item.port }}'
@@ -110,7 +110,7 @@
     - { 'port': 'https', 'dir': 'out', 'rule': 'allow' }
   when: main_network_if == "any"
 
-- name: Init firewall UDP rules --> standards
+- name: UFW -> Init firewall UDP rules --> standards
   ufw:
     rule: '{{ item.rule }}'
     port: '{{ item.port }}'
@@ -120,7 +120,7 @@
   with_items:
     - { 'port': '5353', 'dir': 'out', 'rule': 'allow' }
 
-- name: Init firewall TCP rules (SSH, http) --> standards
+- name: UFW -> Init firewall TCP rules (SSH, http) --> standards (specific IF)
   ufw:
     rule: '{{ item.rule }}'
     port: '{{ item.port }}'
@@ -135,14 +135,14 @@
     - { 'port': 'https', 'dir': 'out', 'rule': 'allow' }
   when: main_network_if != "any"
 
-- name: Insert/Update "A714 rules" configuration footer /etc/ufw/before.rules
+- name: UFW -> Insert/Update "A714 rules" configuration footer /etc/ufw/before.rules
   lineinfile:
     path: /etc/ufw/before.rules
     insertbefore: "^# don't delete the 'COMMIT' line or these rules won't be processed$"
     state: present
     line: '# END ANSIBLE-A714 MANAGED BLOCK'
 
-- name: Insert/Update "A714 rules" configuration footer /etc/ufw/before.rules
+- name: UFW -> Insert/Update "A714 rules" configuration footer /etc/ufw/before.rules
   lineinfile:
     path: /etc/ufw/before.rules
     insertbefore: '^#\ END\ ANSIBLE-A714\ MANAGED\ BLOCK$'
@@ -150,7 +150,7 @@
     state: present
     line: '# START ANSIBLE-A714 MANAGED BLOCK'
 
-- name: Insert/Update "A714 rules" configuration block in /etc/ufw/before.rules
+- name: UFW -> Insert/Update "A714 rules" configuration block in /etc/ufw/before.rules
   lineinfile:
     path: /etc/ufw/before.rules
     insertbefore: '^#\ END\ ANSIBLE-A714\ MANAGED\ BLOCK$'
@@ -158,11 +158,11 @@
     line: '{{ item }}'
   with_items: '{{ additional_fw_rules }}'
 
-- name: Disable Firewall
+- name: UFW -> Disable Firewall
   ufw:
     state: disabled
 
-- name: re-enable Firewall
+- name: UFW -> re-enable Firewall
   ufw:
     state: enabled
   when: enable_firewall|bool

@@ -7,11 +7,12 @@
     enabled: yes
     masked: no
 
-- name: check Custom NFT files exists
+- name: check if Custom NFT files exists
   stat:
     path: "{{ inventory_dir }}/files/{{ inventory_hostname }}/nftables/"
   register: nft_custom_files
   delegate_to: 127.0.0.1
+  become: false
 
 
 - name: copy Custom NFT files

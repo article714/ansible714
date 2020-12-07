@@ -1,11 +1,12 @@
-- name: Enable forwarding for LXD bridges
+
+- name: Enable forwarding for Docker bridges
   ufw:
     default: allow
     direction: 'routed'
     interface: '{{ item }}'
-  with_items: '{{ lxd_bridges }}'
+  with_items: '{{ docker_bridges }}'
 
-- name: Enable http/https for LXD bridges (OUT)
+- name: Enable http/https for Docker bridges (OUT)
   ufw:
     rule: allow
     direction: 'out'
@@ -13,7 +14,7 @@
     port: '{{ item[1] }}'
     proto: tcp
   with_nested:
-    - '{{ lxd_bridges }}'
+    - '{{ docker_bridges }}'
     - ['http', 'https']
 
 - name: Reload Firewall

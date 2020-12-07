@@ -2,6 +2,7 @@
   systemd:
     state: stopped
     name: docker
+  when: restart_docker_daemon | default(True)
 
 - name: Creates empty daemon.json file if it does not exist
   file:
@@ -29,3 +30,4 @@
     state: restarted
     daemon_reload: yes
     name: docker
+  when: restart_docker_daemon | default(True)

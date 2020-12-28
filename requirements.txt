@@ -1,6 +1,6 @@
 # To use the roles and playbooks defined in this repository,
 # you also need to install the following Python packages
-ansible=2.9.9
+ansible==2.9.9
 docker
 hvac
 async-hvac

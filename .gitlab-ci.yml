@@ -8,8 +8,31 @@ variables:
 #-----------------------------------------
 # Need some tests
 
+ansible_linting:
+  stage: tests
+  tags:
+    - docker
+  image: python:3.8-buster
+  script:
+    - pip3 install -r requirements_dev.txt
+    - ansible-lint
+
+
+ansible_testting:
+  stage: tests
+  tags: 
+    - docker
+  image: python:3.8-buster
+  services:
+    - name: ubuntu:20.04
+      alias: target
+  script:
+    - pip3 install -r requirements_dev.txt
+
+
 #-----------------------------------------
 # Trigger 
+
 trigger_build_image:
   stage: build
   trigger: 

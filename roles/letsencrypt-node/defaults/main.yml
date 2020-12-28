@@ -3,3 +3,4 @@
 letsencrypt_enable: true
 letsencrypt_challenge: dns-01
 letsencrypt_wellknown_dir: "/var/www/.well-known"
+letsencrypt_target_dir: /etc/letsencrypt

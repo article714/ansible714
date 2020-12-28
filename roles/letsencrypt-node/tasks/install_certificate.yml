@@ -2,13 +2,13 @@
 - name: Install key file
   block:
     - file:
-        path: /etc/letsencrypt/archive/{{ item.item.dname }}
+        path: "{{ letsencrypt_target_dir  }}/archive/{{ item.item.dname }}"
         owner: root
         group: root
         mode: 0744
         state: directory
     - file:
-        path: /etc/letsencrypt/live/{{ item.item.dname }}
+        path: "{{ letsencrypt_target_dir  }}/live/{{ item.item.dname }}"
         owner: root
         group: root
         mode: 0744
@@ -20,10 +20,10 @@
         mode: 0644
         backup: yes
         src: '/etc/ansible/letsencrypt/keys/{{ item.item.dname }}_key.pem'
-        dest: '/etc/letsencrypt/archive/{{ item.item.dname }}/privkey.pem'
+        dest: '{{ letsencrypt_target_dir  }}/archive/{{ item.item.dname }}/privkey.pem'
     - file:
         state: link
-        dest: '/etc/letsencrypt/live/{{ item.item.dname }}/privkey.pem'
+        dest: '{{ letsencrypt_target_dir  }}/live/{{ item.item.dname }}/privkey.pem'
         src: '../../archive/{{ item.item.dname }}/privkey.pem'
 
 - name: Install cert file
@@ -35,10 +35,10 @@
         mode: 0644
         backup: yes
         src: '/etc/ansible/letsencrypt/certs/{{ item.item.dname }}_cert.pem'
-        dest: '/etc/letsencrypt/archive/{{ item.item.dname }}/cert.pem'
+        dest: '{{ letsencrypt_target_dir  }}/archive/{{ item.item.dname }}/cert.pem'
     - file:
         state: link
-        dest: '/etc/letsencrypt/live/{{ item.item.dname }}/cert.pem'
+        dest: '{{ letsencrypt_target_dir  }}/live/{{ item.item.dname }}/cert.pem'
         src: '../../archive/{{ item.item.dname }}/cert.pem'
 
 - name: Install chain file
@@ -50,10 +50,10 @@
         mode: 0644
         backup: yes
         src: '/etc/ansible/letsencrypt/certs/{{ item.item.dname }}_chain.pem'
-        dest: '/etc/letsencrypt/archive/{{ item.item.dname }}/chain.pem'
+        dest: '{{ letsencrypt_target_dir  }}/archive/{{ item.item.dname }}/chain.pem'
     - file:
         state: link
-        dest: '/etc/letsencrypt/live/{{ item.item.dname }}/chain.pem'
+        dest: '{{ letsencrypt_target_dir  }}/live/{{ item.item.dname }}/chain.pem'
         src: '../../archive/{{ item.item.dname }}/chain.pem'
 
 - name: Install fullchain file
@@ -65,11 +65,11 @@
         mode: 0644
         backup: yes
         src: '/etc/ansible/letsencrypt/certs/{{ item.item.dname }}_fullchain.pem'
-        dest: '/etc/letsencrypt/archive/{{ item.item.dname }}/fullchain.pem'
+        dest: '{{ letsencrypt_target_dir  }}/archive/{{ item.item.dname }}/fullchain.pem'
     - file:
         state: link
-        dest: '/etc/letsencrypt/live/{{ item.item.dname }}/fullchain.pem'
+        dest: '{{ letsencrypt_target_dir  }}/live/{{ item.item.dname }}/fullchain.pem'
         src: '../../archive/{{ item.item.dname }}/fullchain.pem'
 
 - name: Install Complete Certificate file (fullchain+privkey)
-  shell: 'cat /etc/letsencrypt/live/{{ item.item.dname }}/fullchain.pem  /etc/letsencrypt/live/{{ item.item.dname }}/privkey.pem > /etc/letsencrypt/live/{{ item.item.dname }}.pem'
+  shell: 'cat {{ letsencrypt_target_dir  }}/live/{{ item.item.dname }}/fullchain.pem  {{ letsencrypt_target_dir  }}/live/{{ item.item.dname }}/privkey.pem > {{ letsencrypt_target_dir  }}/live/{{ item.item.dname }}.pem'

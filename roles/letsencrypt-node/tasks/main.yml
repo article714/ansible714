@@ -32,7 +32,7 @@
 
 - name: Check certificates date
   stat:
-    path: /etc/letsencrypt/live/{{ item.dname }}/fullchain.pem
+    path: "{{ letsencrypt_target_dir  }}/live/{{ item.dname }}/fullchain.pem"
     follow: yes
   register: mtimes
   with_items: '{{ acme_domains }}'

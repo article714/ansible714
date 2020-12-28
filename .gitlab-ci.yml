@@ -1,0 +1,18 @@
+stages:
+  - tests
+  - build
+
+variables:
+  ANSIBLE714_VERSION: '0.1.0'
+
+#-----------------------------------------
+# Need some tests
+
+#-----------------------------------------
+# Trigger 
+trigger_build_image:
+  stage: build
+  trigger: 
+    project: article714/ansible714-docker
+    branch: ${CI_COMMIT_BRANCH}
+    strategy: depend

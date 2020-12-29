@@ -54,7 +54,7 @@ curdir=$(pwd)
 
 # update foreign roles & modules from "foreign" repos
 
-repos=$(cat ./ansible714/ansible_dependencies.txt | grep -v -e '^#.*')
+repos=$(cat ansible_dependencies.txt | grep -v -e '^#.*')
 
 if ! [ -d "./foreign" ]; then
     mkdir -p ./foreign

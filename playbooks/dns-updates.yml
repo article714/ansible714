@@ -1,7 +1,7 @@
 # Updating DNS entries
 #
 - name: Update DNS records
-  hosts: DebianNodes
+  hosts: all
   become: false
   gather_facts: no
 

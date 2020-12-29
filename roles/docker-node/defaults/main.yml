@@ -6,3 +6,4 @@ docker_networks: []
 DOCKERIZED_APPS: []
 docker_default_dns: false
 restart_docker_daemon: true
+docker_deploy_containers_only: false

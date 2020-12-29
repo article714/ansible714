@@ -1,8 +1,12 @@
 ---
 - include: configure_apt.yml
+  when: not docker_deploy_containers_only
 - include: install_docker.yml
+  when: not docker_deploy_containers_only
 - include: setup_docker_data_dir.yml
+  when: not docker_deploy_containers_only
 - include: deploy_networks.yml
+  when: not docker_deploy_containers_only
 - include: ufw_firewall.yml
   when: use_ufw
 - include: deploy_containers.yml

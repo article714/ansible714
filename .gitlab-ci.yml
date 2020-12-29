@@ -34,6 +34,10 @@ ansible_testing_simple_playbook:
 
 trigger_build_image:
   stage: build
+  only:
+    refs:
+      - production
+      - master
   trigger: 
     project: article714/ansible714-docker
     branch: ${CI_COMMIT_BRANCH}

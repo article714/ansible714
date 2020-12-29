@@ -15,6 +15,7 @@ ansible_linting:
   image: python:3.8-buster
   script:
     - chmod 750 .
+    - mkdir -p log
     - cp tests/ansible.cfg .
     - pip3 install -r requirements_dev.txt
     - /bin/bash scripts/init_dependencies.sh
@@ -29,9 +30,16 @@ ansible_testing_simple_playbook:
   script:
     - chmod 750 .
     - cp tests/ansible.cfg .
+    - mkdir -p log
     - pip3 install -r requirements_dev.txt
     - /bin/bash scripts/init_dependencies.sh
     - ansible-playbook -i tests/target.yml update-software.yml
+  artifacts:
+    paths:
+      - log/*
+    expire_in: 2 days
+    when: always
+
 
 #-----------------------------------------
 # Trigger 

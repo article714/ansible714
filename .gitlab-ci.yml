@@ -15,11 +15,7 @@ ansible_linting:
   image: python:3.8-buster
   script:
     - pip3 install -r requirements_dev.txt
-    - while read role; do 
-        if ! [[ $role =~ ^\#.* ]]; then
-           ansible-galaxy install ${role};
-        fi;
-      done < galaxy_roles.txt
+    - /bin/bash scripts/init_dependencies.sh
     - ansible-lint
 
 
@@ -30,11 +26,7 @@ ansible_testing_simple_playbook:
   image: python:3.8-buster
   script:
     - pip3 install -r requirements_dev.txt
-    - while read role; do 
-        if ! [[ $role =~ ^\#.* ]]; then
-           ansible-galaxy install ${role};
-        fi;
-      done < galaxy_roles.txt
+    - /bin/bash scripts/init_dependencies.sh
     - ansible-playbook -i tests/target.yml update-software.yml
 
 #-----------------------------------------

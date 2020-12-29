@@ -1,5 +1,19 @@
 #!/bin/bash
-# set -x
+set -x
+
+#------------------------------------
+# check if a target directory is provided
+
+if [ -z "$1" ]; then
+    target_dir='.'
+else
+    if [ -d "$1" ]; then
+        target_dir="$1"
+    else
+        target_dir='.'
+    fi
+
+fi
 
 #------------------------------------
 # functions

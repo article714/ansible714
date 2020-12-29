@@ -53,14 +53,9 @@ _C'est à partir de ce répertoire que pourront être exécutés les playbooks A
 
 1. Création du répertoire cible
 2. intialisation de l'arborescence via le script `./scripts/build_inventory_dir.sh <inventory directory full path>`
-3. Mise à jour des recettes, dans le répertoire de l'inventaire:
-   `./init_all_roles.sh`
-4. On teste si le tout fonctionne
+3. ..
 
-   ```shell
-   workon ansible
-   ansible all -m ping
-   ```
+**TODO**: documenter l'usage de docker et de run_ansible714.sh
 
 Les fichiers par défaut posés dans le répertoire `inventory` peuvent ensuite être modifiés pour s'adapter à l'environnement cible.
 

@@ -1,8 +1,0 @@
-- name: Odoo on Docker with shared Postgresql
-  hosts: odooOnDockerNodes
-  remote_user: root
-  become: true
-
-  roles:
-    - docker-node
-    - psql-for-odoo

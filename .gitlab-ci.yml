@@ -33,7 +33,7 @@ ansible_testing_simple_playbook:
     - mkdir -p log
     - pip3 install -r requirements_dev.txt
     - /bin/bash scripts/init_dependencies.sh
-    - ansible-playbook -i tests/target.yml update-software.yml
+    - ansible-playbook -i tests/target.yml playbooks/update-software.yml
   artifacts:
     paths:
       - log/*

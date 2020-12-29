@@ -61,12 +61,29 @@ get_galaxy_roles() {
 
 }
 
+create_links() {
+    pb_sources='foreign ansible714'
+    for pbs in ${pb_sources}; do
+        playbooks=$(find ${pbs}/ -type f -iwholename '*/playbooks/*.yml')
+        rm -f playbooks/.gitignore
+        for p in ${playbooks}; do
+            playbook_name=$(basename ${p})
+            if [ -f playbooks/${playbook_name} -o -L playbooks/${playbook_name} ]; then
+                echo "${playbook_name} already exists"
+            else
+                ln -s ${curdir}/${p} playbooks/${playbook_name}
+                echo "${playbook_name}" >>playbooks/.gitignore
+            fi
+        done
+    done
+}
+
 #------------------------------------
 # main script go
 
 curdir=$(pwd)
 
-# update foreign roles & modules from "foreign" repos
+# update foreign roles & modules from "foreign" repos (git clone)
 
 repos=$(cat ansible_dependencies.txt | grep -v -e '^#.*')
 
@@ -76,8 +93,10 @@ fi
 cd ${target_dir}/foreign/
 clone_repos
 
-# get galaxy roles
-cd ${target_dir}/foreign/
-get_galaxy_roles
+# create playbook links
+cd ${target_dir}
+create_links
 
+# get galaxy roles
 cd ${curdir}
+get_galaxy_roles

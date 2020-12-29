@@ -14,6 +14,8 @@ ansible_linting:
     - docker
   image: python:3.8-buster
   script:
+    - chmod 750 .
+    - cp tests/ansible.cfg .
     - pip3 install -r requirements_dev.txt
     - /bin/bash scripts/init_dependencies.sh
     - ansible-lint
@@ -25,6 +27,8 @@ ansible_testing_simple_playbook:
     - docker
   image: python:3.8-buster
   script:
+    - chmod 750 .
+    - cp tests/ansible.cfg .
     - pip3 install -r requirements_dev.txt
     - /bin/bash scripts/init_dependencies.sh
     - ansible-playbook -i tests/target.yml update-software.yml

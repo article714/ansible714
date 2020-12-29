@@ -1,28 +1,10 @@
-CERTIFICARE:
+TESTING:
   hosts:
     localhost:
       ansible_host: target
       ansible_connection: local
       ansible_python_interpreter: /usr/bin/python3
-      ansible_user: ansible
-      ansible_become: false
-      DOCKER_HOST: "{{ lookup('env','DOCKER_URL') }}"
-      DOCKERIZED_APPS:
-        - {
-            "name": "{{ lookup('env','CONTAINER_NAME') }}",
-            "docker_registry": "{{ lookup('env','DOCKER_REGISTRY_HOST') }}",
-            "image_name": "{{ lookup('env','CONTAINER_IMAGE') }}",
-            "image_local": True,
-            "container_network": "internal_bridge",
-            "container_ip": "{{ lookup('env','CONTAINER_IP') }}",
-            "environment": {},
-            "volumes":
-              [
-                "{{ lookup('env','CONTAINER_NAME') }}_config:/container/config",
-                "{{ lookup('env','CONTAINER_NAME') }}_logs:/var/log",
-              ],
-          }
   children:
-    DockerNodes:
+    DebianNodes:
       hosts:
         localhost:

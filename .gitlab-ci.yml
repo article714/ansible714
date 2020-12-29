@@ -15,20 +15,27 @@ ansible_linting:
   image: python:3.8-buster
   script:
     - pip3 install -r requirements_dev.txt
+    - while read role; do 
+        if ! [[ $role =~ ^\#.* ]]; then
+           ansible-galaxy install ${role};
+        fi;
+      done < galaxy_roles.txt
     - ansible-lint
 
 
-ansible_testting:
+ansible_testing_simple_playbook:
   stage: tests
   tags: 
     - docker
   image: python:3.8-buster
-  services:
-    - name: ubuntu:20.04
-      alias: target
   script:
     - pip3 install -r requirements_dev.txt
-
+    - while read role; do 
+        if ! [[ $role =~ ^\#.* ]]; then
+           ansible-galaxy install ${role};
+        fi;
+      done < galaxy_roles.txt
+    - ansible-playbook -i tests/target.yml update-software.yml
 
 #-----------------------------------------
 # Trigger 

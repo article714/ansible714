@@ -65,14 +65,12 @@ create_links() {
     pb_sources='foreign ansible714'
     for pbs in ${pb_sources}; do
         playbooks=$(find ${pbs}/ -type f -iwholename '*/playbooks/*.yml')
-        rm -f playbooks/.gitignore
         for p in ${playbooks}; do
             playbook_name=$(basename ${p})
             if [ -f playbooks/${playbook_name} -o -L playbooks/${playbook_name} ]; then
                 echo "${playbook_name} already exists"
             else
-                ln -s ${curdir}/${p} playbooks/${playbook_name}
-                echo "${playbook_name}" >>playbooks/.gitignore
+                ln -s ${target_dir}/${p} playbooks/${playbook_name}
             fi
         done
     done

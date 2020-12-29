@@ -70,12 +70,14 @@ curdir=$(pwd)
 
 repos=$(cat ansible_dependencies.txt | grep -v -e '^#.*')
 
-if ! [ -d "./foreign" ]; then
-    mkdir -p ./foreign
+if ! [ -d "${target_dir}/foreign" ]; then
+    mkdir -p ${target_dir}/foreign
 fi
-cd ./foreign/
+cd ${target_dir}/foreign/
 clone_repos
-cd ../
 
 # get galaxy roles
+cd ${target_dir}/foreign/
 get_galaxy_roles
+
+cd ${curdir}

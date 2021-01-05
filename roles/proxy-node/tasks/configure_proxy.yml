@@ -1,13 +1,21 @@
----
-#    - name: Apply settings
-#      template:
-#        src: "{{inventory_dir}}/files/{{inventory_hostname}}/ha/haproxy.cfg"
-#        dest: /etc/haproxy/haproxy.cfg
-#        owner: root
-#        group: root
-#        mode: 0644
-#    
-    - name: Restart Proxy
-      service:
-        name: trafficserver
-        state: restarted
+
+- name: check if Config files exists
+  stat:
+    path: "{{ inventory_dir }}/files/{{ inventory_hostname }}/trafficserver/"
+  register: trafficerver_config_dir
+  delegate_to: 127.0.0.1
+  become: false
+
+- name: Apply settings
+  copy:
+    src: "{{ inventory_dir }}/files/{{ inventory_hostname }}/trafficserver/"
+    dest: "/etc/trafficserver/"
+    owner: root
+    group: root
+    mode: "0644"
+  when: trafficerver_config_dir.stat.exists
+
+- name: Restart Proxy
+  service:
+    name: trafficserver
+    state: restarted

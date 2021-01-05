@@ -22,5 +22,9 @@ network_manager: false
 
 use_ufw: true
 use_nft: false
+# Do not remove legacy ip tables => issue with docker
+nft_old_pkg_list : []
+nft_old_pkg_state : present
+nft_old_pkg_manage: false
 
 dns_entries: []

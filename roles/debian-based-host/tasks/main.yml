@@ -2,8 +2,10 @@
 - include: network.yml
 - include: dependencies.yml
 - include: filesystem.yml
+- include: update-dns.yml
 - include: private_key.yml
-- include: sysconfig.yml
+- include: ssl_certs.yml
+- include: syslog_config.yml
 - include: ufw_firewall.yml
   when: use_ufw
 - include: nft_firewall.yml

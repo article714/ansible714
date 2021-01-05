@@ -1,0 +1,21 @@
+
+- name: check if Rsyslog directory exists
+  stat:
+    path: "{{ inventory_dir }}/files/{{ inventory_hostname }}/rsyslog/"
+  register: rsyslog_config_dir
+  delegate_to: 127.0.0.1
+  become: false
+
+- name: Apply settings (rsyslogd)
+  copy:
+    src: "{{ inventory_dir }}/files/{{ inventory_hostname }}/rsyslog/"
+    dest: "/etc/rsyslog.d/"
+    owner: root
+    group: root
+    mode: "0644"
+  when: rsyslog_config_dir.stat.exists
+
+- name: Restart Rsyslogd
+  service:
+    name: rsyslog
+    state: restarted

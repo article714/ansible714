@@ -2,6 +2,8 @@
 - include: dependencies.yml
 - include: filesystem.yml
 - include: private_key.yml
+- include: ssl_certs.yml
+- include: syslog_config.yml
 - include: update-dns.yml
 
 - name: configure hostname and domain name

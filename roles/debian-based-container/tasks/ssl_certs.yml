@@ -1,0 +1,17 @@
+
+- name: check if Certs directory exists
+  stat:
+    path: "{{ inventory_dir }}/files/{{ inventory_hostname }}/certs/"
+  register: certs_config_dir
+  delegate_to: 127.0.0.1
+  become: false
+
+- name: Copy SSL Certificates)
+  copy:
+    src: "{{ inventory_dir }}/files/{{ inventory_hostname }}/certs/"
+    dest: "/etc/ssl/certs"
+    owner: root
+    group: root
+    mode: "0644"
+  when: certs_config_dir.stat.exists
+

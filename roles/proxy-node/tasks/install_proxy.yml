@@ -1,0 +1,14 @@
+- name: Update apt cache
+  apt: update_cache=yes cache_valid_time=3600
+  
+- name: Install TrafficServer and deps
+  apt: 
+    name: 
+      - trafficserver
+      - prometheus-trafficserver-exporter
+    state: present
+    update_cache: yes
+  retries: 3
+  delay: 15
+  register: result
+  until: result is not failed

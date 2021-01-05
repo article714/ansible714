@@ -1,0 +1,9 @@
+---
+
+- include: install_proxy.yml
+
+- include: configure_proxy.yml
+
+- name: Set Up Firewall
+  include: ufw_firewall.yml
+  when: machine_type == 'host' and use_ufw

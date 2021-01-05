@@ -1,0 +1,16 @@
+#
+# Manage a Proxy Server instance (Apache Traffic Server)
+#
+
+- name: Deploy and setup TrafficServer
+  hosts: ProxyNodes
+  remote_user: root
+  become: true
+  gather_facts: yes
+
+  pre_tasks:
+    - setup:
+      when: machine_type == "host"
+
+  roles:
+    - proxy-node

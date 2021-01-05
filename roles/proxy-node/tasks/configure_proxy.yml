@@ -1,0 +1,13 @@
+---
+#    - name: Apply settings
+#      template:
+#        src: "{{inventory_dir}}/files/{{inventory_hostname}}/ha/haproxy.cfg"
+#        dest: /etc/haproxy/haproxy.cfg
+#        owner: root
+#        group: root
+#        mode: 0644
+#    
+    - name: Restart Proxy
+      service:
+        name: trafficserver
+        state: restarted

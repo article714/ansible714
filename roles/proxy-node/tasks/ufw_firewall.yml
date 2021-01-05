@@ -10,8 +10,10 @@
   with_items:
     - { 'port': 'http', 'dir': 'in', 'rule': 'allow' }
     - { 'port': 'https', 'dir': 'in', 'rule': 'allow' }
-    - { 'port': '{{ custom_proxy_port }}', 'dir': 'in', 'rule': 'allow' }
-    - { 'port': '{{ custom_proxy_port }}', 'dir': 'out', 'rule': 'allow' }
+    - { 'port': '{{ custom_proxy_http_port }}', 'dir': 'in', 'rule': 'allow' }
+    - { 'port': '{{ custom_proxy_http_port }}', 'dir': 'out', 'rule': 'allow' }
+    - { 'port': '{{ custom_proxy_https_port }}', 'dir': 'in', 'rule': 'allow' }
+    - { 'port': '{{ custom_proxy_https_port }}', 'dir': 'out', 'rule': 'allow' }
   when: main_if_is_bridged
 
 - name: Update firewall rules (TCP)
@@ -24,8 +26,10 @@
   with_items:
     - { 'port': 'http', 'dir': 'in', 'rule': 'allow' }
     - { 'port': 'https', 'dir': 'in', 'rule': 'allow' }
-    - { 'port': '{{ custom_proxy_port }}', 'dir': 'in', 'rule': 'allow' }
-    - { 'port': '{{ custom_proxy_port }}', 'dir': 'out', 'rule': 'allow' }
+    - { 'port': '{{ custom_proxy_http_port }}', 'dir': 'in', 'rule': 'allow' }
+    - { 'port': '{{ custom_proxy_http_port }}', 'dir': 'out', 'rule': 'allow' }
+    - { 'port': '{{ custom_proxy_https_port }}', 'dir': 'in', 'rule': 'allow' }
+    - { 'port': '{{ custom_proxy_https_port }}', 'dir': 'out', 'rule': 'allow' }
 
 - name: Reload Firewall
   ufw:

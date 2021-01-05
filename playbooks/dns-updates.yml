@@ -22,6 +22,7 @@
         create: yes
       delegate_to: 127.0.0.1
       with_items: '{{ dns_entries }}'
+      when: dns_entries | default(false)
       become: no
 
     - name: refresh DNS At OVH (LocalHost)
@@ -35,4 +36,5 @@
         name: refresh
       delegate_to: 127.0.0.1
       with_items: "{{ dns_entries | map(attribute='zone')  | unique }}"
+      when: dns_entries | default(false)
       become: no

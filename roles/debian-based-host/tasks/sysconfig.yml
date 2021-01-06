@@ -8,4 +8,4 @@
   with_items:
     - net.ipv6.conf.all.forwarding
     - net.ipv4.ip_forward
-  when: routing_enabled|bool
+  when: routing_enabled|default(false)

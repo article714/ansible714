@@ -37,7 +37,7 @@
   with_items:
     - 'opendkim'
     - 'opendkim/keys'
-  when: letsencrypt_enable|bool
+  when: letsencrypt_enable|default(false)
 
 - name: Create Domain(s) directory
   file:

@@ -10,7 +10,7 @@
   with_items:
     - { 'port': '{{ custom_proxy_http_port }}', 'dir': 'in', 'rule': 'allow' }
     - { 'port': '{{ custom_proxy_https_port }}', 'dir': 'in', 'rule': 'allow' }
-  when: proxy_in_interface|bool
+  when: proxy_in_interface| default(false)
 
 - name: Update firewall rules (TCP)
   ufw:
@@ -22,7 +22,7 @@
   with_items:
     - { 'port': '{{ custom_proxy_http_port }}', 'dir': 'in', 'rule': 'allow' }
     - { 'port': '{{ custom_proxy_https_port }}', 'dir': 'in', 'rule': 'allow' }
-  when: proxy_in_interface|bool
+  when: proxy_in_interface| default(false)
 
 - name: Reload Firewall
   ufw:

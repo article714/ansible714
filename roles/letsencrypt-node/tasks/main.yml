@@ -28,7 +28,7 @@
     terms_agreed: yes
     contact:
       - 'mailto:{{ ACME_ACCOUNT_EMAIL }}'
-  when: letsencrypt_enable|bool
+  when: letsencrypt_enable|default(false)
 
 - name: Check certificates date
   stat:
@@ -36,13 +36,13 @@
     follow: yes
   register: mtimes
   with_items: '{{ acme_domains }}'
-  when: letsencrypt_enable|bool
+  when: letsencrypt_enable|default(false)
 
 - name: Renew Certificates
   include: renew_certificate.yml
-  when: (letsencrypt_enable|bool and (( not item.stat.exists ) or ( ansible_date_time.epoch|float - item.stat.mtime > 60*60*24*60 )))
+  when: (letsencrypt_enable|default(false) and (( not item.stat.exists ) or ( ansible_date_time.epoch|float - item.stat.mtime > 60*60*24*60 )))
   with_items: '{{ mtimes.results }}'
 
 - name: Cleanup when needed
   include: cleanup.yml
-  when: letsencrypt_enable|bool
+  when: letsencrypt_enable|default(false)

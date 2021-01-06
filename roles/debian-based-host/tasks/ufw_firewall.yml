@@ -26,7 +26,7 @@
     direction: 'routed'
   with_items:
     - 'routed'
-  when: routing_enabled|bool
+  when: routing_enabled|default(false)
 
 - name: UFW -> allow outgoing forwarding when main_if is bridged
   ufw:
@@ -35,7 +35,7 @@
     interface: '{{ main_network_if }}'
   with_items:
     - 'outgoing'
-  when: main_if_is_bridged|bool and main_network_if != "any" and routing_enabled|bool
+  when: main_if_is_bridged|default(false) and main_network_if != "any" and routing_enabled|default(false)
 
 - name: UFW -> Init firewall rules -> DNS, NTP (allow out on all interfaces, any protocol)
   ufw:
@@ -64,7 +64,7 @@
     - { 'port': 'http', 'dir': 'out', 'rule': 'allow' }
     - { 'port': 'https', 'dir': 'in', 'rule': 'allow' }
     - { 'port': 'https', 'dir': 'out', 'rule': 'allow' }
-  when: main_if_is_bridged|bool and main_network_if != "any"
+  when: main_if_is_bridged|default(false) and main_network_if != "any"
 
 - name: UFW -> Init firewall UDP rules (DNS, NTP) --> Forward/routed
   ufw:
@@ -81,7 +81,7 @@
     - { 'port': '123', 'dir': 'out', 'rule': 'allow' }
     - { 'port': '5353', 'dir': 'in', 'rule': 'allow' }
     - { 'port': '5353', 'dir': 'out', 'rule': 'allow' }
-  when: main_if_is_bridged|bool and main_network_if != "any"
+  when: main_if_is_bridged|default(false) and main_network_if != "any"
 
 - name: UFW -> Init firewall TCP rules (SSH, http) --> standards (specific IF)
   ufw:
@@ -165,4 +165,4 @@
 - name: UFW -> re-enable Firewall
   ufw:
     state: enabled
-  when: enable_firewall|bool
+  when: enable_firewall|default(false)

@@ -11,7 +11,7 @@
     - 'certs'
     - 'live'
     - 'archive'
-  when: letsencrypt_enable|bool
+  when: letsencrypt_enable|default(false)
 
 - name: Create ansible /etc/ansible/letsencrypt directory
   file:
@@ -23,7 +23,7 @@
   with_items:
     - 'letsencrypt'
     - 'keys'
-  when: letsencrypt_enable|bool
+  when: letsencrypt_enable|default(false)
 
 - name: Create letsencrypt dir layout in /etc/ansible
   file:
@@ -37,4 +37,4 @@
     - 'certs'
     - 'keys'
     - 'account'
-  when: letsencrypt_enable|bool
+  when: letsencrypt_enable|default(false)

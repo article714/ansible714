@@ -4,32 +4,25 @@
     rule: '{{ item.rule }}'
     port: '{{ item.port }}'
     proto: tcp
-    interface: '{{ main_network_if }}'
+    interface: '{{ proxy_in_interface }}'
     direction: '{{ item.dir }}'
     route: yes
   with_items:
-    - { 'port': 'http', 'dir': 'in', 'rule': 'allow' }
-    - { 'port': 'https', 'dir': 'in', 'rule': 'allow' }
     - { 'port': '{{ custom_proxy_http_port }}', 'dir': 'in', 'rule': 'allow' }
-    - { 'port': '{{ custom_proxy_http_port }}', 'dir': 'out', 'rule': 'allow' }
     - { 'port': '{{ custom_proxy_https_port }}', 'dir': 'in', 'rule': 'allow' }
-    - { 'port': '{{ custom_proxy_https_port }}', 'dir': 'out', 'rule': 'allow' }
-  when: main_if_is_bridged
+  when: proxy_in_interface
 
 - name: Update firewall rules (TCP)
   ufw:
     rule: '{{ item.rule }}'
     port: '{{ item.port }}'
     proto: tcp
-    interface: '{{ main_network_if }}'
+    interface: '{{ proxy_in_interface }}'
     direction: '{{ item.dir }}'
   with_items:
-    - { 'port': 'http', 'dir': 'in', 'rule': 'allow' }
-    - { 'port': 'https', 'dir': 'in', 'rule': 'allow' }
     - { 'port': '{{ custom_proxy_http_port }}', 'dir': 'in', 'rule': 'allow' }
-    - { 'port': '{{ custom_proxy_http_port }}', 'dir': 'out', 'rule': 'allow' }
     - { 'port': '{{ custom_proxy_https_port }}', 'dir': 'in', 'rule': 'allow' }
-    - { 'port': '{{ custom_proxy_https_port }}', 'dir': 'out', 'rule': 'allow' }
+  when: proxy_in_interface
 
 - name: Reload Firewall
   ufw:

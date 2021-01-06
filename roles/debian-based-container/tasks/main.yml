@@ -1,6 +1,7 @@
 ---
 - include: dependencies.yml
 - include: filesystem.yml
+- include: cleanup_config.yml
 - include: private_key.yml
 - include: ssl_certs.yml
 - include: syslog_config.yml

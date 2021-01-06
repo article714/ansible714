@@ -21,3 +21,25 @@
   command: "perl -pi -e  's/^([^#])(.*{{ item.key }}.*)$/# $1$2/' /etc/network/interfaces"
   when: systemd_networkd_status.rc != 0
   loop: "{{ lookup('dict', systemd_networkd_network, wantlist=True) }}"
+
+- name: find old systemd-networkd files
+  find:
+    paths: 
+      - '/var/run/systemd/network/'
+    patterns: '*'
+  register: files_to_delete
+  when: systemd_networkd_apply_config
+
+- name: remove old systemd-networkd files
+  file:
+    path: "{{ item.path }}"
+    state: absent
+  with_items: "{{ files_to_delete.files }}"
+  when: systemd_networkd_apply_config
+
+
+- name: restart systemd-networkd
+  service:
+    name: systemd-networkd
+    state: restarted
+  when: systemd_networkd_apply_config

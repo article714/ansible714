@@ -7,4 +7,3 @@
     state: directory
   with_items:
     - 'keys'
-

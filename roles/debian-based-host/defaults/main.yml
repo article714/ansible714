@@ -12,6 +12,7 @@ routing_enabled: true
 reset_firewall: false
 enable_firewall: true
 additional_fw_rules: []
+additional_fw_rules6: []
 
 systemd_networkd_apply_config: false
 systemd_networkd_enable_resolved: true

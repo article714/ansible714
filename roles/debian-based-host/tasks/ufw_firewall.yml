@@ -135,28 +135,42 @@
     - { 'port': 'https', 'dir': 'out', 'rule': 'allow' }
   when: main_network_if != "any"
 
-- name: UFW -> Insert/Update "A714 rules" configuration footer /etc/ufw/before.rules
+- name: UFW -> Insert/Update "A714 rules" configuration footer 
   lineinfile:
-    path: /etc/ufw/before.rules
+    path: /etc/ufw/user.rules
     insertbefore: "^# don't delete the 'COMMIT' line or these rules won't be processed$"
     state: present
     line: '# END ANSIBLE-A714 MANAGED BLOCK'
+  with_items: 
+    - user.rules 
+    - user6.rules
 
-- name: UFW -> Insert/Update "A714 rules" configuration footer /etc/ufw/before.rules
+- name: UFW -> Insert/Update "A714 rules" configuration footer 
   lineinfile:
-    path: /etc/ufw/before.rules
+    path: /etc/ufw/user.rules
     insertbefore: '^#\ END\ ANSIBLE-A714\ MANAGED\ BLOCK$'
     regexp: '^#\ START\ ANSIBLE-A714\ MANAGED\ BLOCK$'
     state: present
     line: '# START ANSIBLE-A714 MANAGED BLOCK'
+  with_items: 
+    - user.rules 
+    - user6.rules
 
-- name: UFW -> Insert/Update "A714 rules" configuration block in /etc/ufw/before.rules
+- name: UFW -> Insert/Update "A714 rules" configuration block in /etc/ufw/user.rules
   lineinfile:
-    path: /etc/ufw/before.rules
+    path: /etc/ufw/user.rules
     insertbefore: '^#\ END\ ANSIBLE-A714\ MANAGED\ BLOCK$'
     state: present
     line: '{{ item }}'
   with_items: '{{ additional_fw_rules }}'
+
+- name: UFW -> Insert/Update "A714 rules" configuration block in /etc/ufw/user6.rules
+  lineinfile:
+    path: /etc/ufw/user6.rules
+    insertbefore: '^#\ END\ ANSIBLE-A714\ MANAGED\ BLOCK$'
+    state: present
+    line: '{{ item }}'
+  with_items: '{{ additional_fw_rules6 }}'
 
 - name: UFW -> Disable Firewall
   ufw:

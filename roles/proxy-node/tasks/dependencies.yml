@@ -1,7 +1,6 @@
 - name: System dependencies
   apt:
     name:
-      - python-requests
       - python3-requests
     update_cache: yes
     state: latest

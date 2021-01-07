@@ -2,7 +2,13 @@
 
 - include: install_proxy.yml
 
+- include: dependencies.yml
+
 - include: configure_proxy.yml
+
+- name: Configure log sender to ovh-ldp
+  include: configure_log_sender.yml
+  when: proxy_use_ldp | default(true)
 
 - name: Set Up Firewall
   include: ufw_firewall.yml

@@ -1,0 +1,13 @@
+[Unit]
+Description=Sends trafficserver to Graylog (OVH LDP)
+After=trafficserver.service
+
+[Service]
+Type=simple
+PIDFile=/run/trafficserver/log_sender.pid
+ExecStart=/usr/bin/python3 /usr/local/bin/log_sender.py
+Restart=on-failure
+User=trafficserver
+
+[Install]
+WantedBy=multi-user.target

@@ -1,0 +1,21 @@
+- name: Install Log Sender
+  copy:
+    dest: "/usr/local/bin"
+    src: log_sender.py
+    mode: "755"
+    owner: root
+    group: trafficserver
+  when: proxy_use_ldp | default(true)
+
+- name: Install Log Sender Service Unit
+  copy:
+    dest: "/etc/systemd/system/"
+    src: log_sender.service
+    mode: "755"
+    owner: root
+    group: trafficserver
+  when: proxy_use_ldp | default(true)
+
+- name: enable and start log_sender
+  service: name=log_sender enabled=yes state=started
+  when: proxy_use_ldp | default(true)

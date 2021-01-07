@@ -3,3 +3,4 @@
 custom_proxy_http_port: 8080
 custom_proxy_https_port: 4443
 proxy_in_interface: false
+proxy_use_ldp: true

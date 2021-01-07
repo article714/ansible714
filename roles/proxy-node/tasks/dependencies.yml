@@ -1,0 +1,15 @@
+- name: System dependencies
+  apt:
+    name:
+      - python-requests
+      - python3-requests
+    update_cache: yes
+    state: latest
+
+- name: Install logging-ldp
+  pip:
+    executable: pip3
+    name:
+      - logging-ldp
+    state: latest
+  when: proxy_use_ldp | default(true)

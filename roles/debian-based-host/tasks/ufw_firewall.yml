@@ -138,7 +138,7 @@
 - name: UFW -> Insert/Update "A714 rules" configuration footer 
   lineinfile:
     path: /etc/ufw/user.rules
-    insertbefore: "^# don't delete the 'COMMIT' line or these rules won't be processed$"
+    insertbefore: "^### LOGGING ###$"
     state: present
     line: '# END ANSIBLE-A714 MANAGED BLOCK'
   with_items: 

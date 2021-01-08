@@ -135,15 +135,13 @@
     - { 'port': 'https', 'dir': 'out', 'rule': 'allow' }
   when: main_network_if != "any"
 
-- name: UFW -> Insert/Update "A714 rules" configuration footer 
+- name: UFW -> Insert/Update "A714 rules" configuration block in /etc/ufw/user.rules
   lineinfile:
     path: /etc/ufw/user.rules
-    insertbefore: "^### LOGGING ###$"
+    insertbefore: '^### END RULES ###$'
     state: present
-    line: '# END ANSIBLE-A714 MANAGED BLOCK'
-  with_items: 
-    - user.rules 
-    - user6.rules
+    line: '{{ item }}'
+  with_items: '{{ additional_fw_rules }}'
 
 - name: UFW -> Insert/Update "A714 rules" configuration block in /etc/ufw/user6.rules
   lineinfile:

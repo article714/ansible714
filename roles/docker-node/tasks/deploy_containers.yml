@@ -24,11 +24,11 @@
   when: not (item.exists | default(True))
   with_items: "{{ volumes_status.results }}"
 
-- name: Deploy containers
+- name: Deploy containers (with single network)
   docker_container:
     docker_host: "{{ DOCKER_HOST | default('unix://var/run/docker.sock') }}"
     name: "{{ item.name}}"
-    image: "{{ item.docker_registry | default('docker.io') }}/{{ item.image_name }}"
+    image: "{{ item.docker_registry | default('docker.io') ~ '/' if item.image_local | default(False) else '' }}{{ item.image_name }}"
     volumes: "{{ item.volumes | default(omit) }}"
     env: "{{ item.environment | default(omit) }}"
     command: "{{ item.command | default(omit) }}"
@@ -44,14 +44,14 @@
     state: started
     restart_policy: always
     recreate: "{{ item.recreate | default('yes') }}"
-  when: not ( item.image_local | default(False) )
+  when: not ( item.connect_host_network | default(False) or  item.networks|default(False) )
   with_items: "{{ DOCKERIZED_APPS }}"
 
-- name: Deploy containers
+- name: Deploy containers (with several networkS)
   docker_container:
     docker_host: "{{ DOCKER_HOST | default('unix://var/run/docker.sock') }}"
     name: "{{ item.name}}"
-    image: "{{ item.image_name }}"
+    image: "{{ item.docker_registry | default('docker.io') ~ '/' if item.image_local | default(False) else '' }}{{ item.image_name }}"
     volumes: "{{ item.volumes | default(omit) }}"
     env: "{{ item.environment | default(omit) }}"
     command: "{{ item.command | default(omit) }}"
@@ -59,13 +59,32 @@
     ports: "{{ item.ports | default(omit) }}"
     exposed_ports: "{{ item.exposed_ports | default(omit) }}"
     purge_networks: yes
-    networks:
-      - name: "{{ item.container_network }}"
-        ipv4_address: "{{ item.container_ip | default(omit)}}"
+    networks: "{{ item. networks }}"
     dns_servers: "{{ item.dns | default(omit) }}"
     capabilities: "{{ item.capabilities | default(omit) }}"
     state: started
     restart_policy: always
     recreate: "{{ item.recreate | default('yes') }}"
-  when: item.image_local | default(False)
+  when: not ( item.connect_host_network | default(False) or  item.networks|default(False) )
+  with_items: "{{ DOCKERIZED_APPS }}"
+
+- name: Deploy containers (host network)
+  docker_container:
+    docker_host: "{{ DOCKER_HOST | default('unix://var/run/docker.sock') }}"
+    name: "{{ item.name}}"
+    image: "{{ item.docker_registry | default('docker.io') ~ '/' if item.image_local | default(False) else '' }}{{ item.image_name }}"
+    volumes: "{{ item.volumes | default(omit) }}"
+    env: "{{ item.environment | default(omit) }}"
+    command: "{{ item.command | default(omit) }}"
+    hostname: "{{ item.hostname | default(omit) }}"
+    ports: "{{ item.ports | default(omit) }}"
+    exposed_ports: "{{ item.exposed_ports | default(omit) }}"
+    purge_networks: yes
+    network_mode: host
+    dns_servers: "{{ item.dns | default(omit) }}"
+    capabilities: "{{ item.capabilities | default(omit) }}"
+    state: started
+    restart_policy: always
+    recreate: "{{ item.recreate | default('yes') }}"
+  when: item.connect_host_network | default(False) and not item.networks|default(False)
   with_items: "{{ DOCKERIZED_APPS }}"

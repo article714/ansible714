@@ -28,7 +28,7 @@
   docker_container:
     docker_host: "{{ DOCKER_HOST | default('unix://var/run/docker.sock') }}"
     name: "{{ item.name}}"
-    image: "{{ item.docker_registry | default('docker.io') ~ '/' if item.image_local | default(False) else '' }}{{ item.image_name }}"
+    image: "{{ item.docker_registry | default('docker.io') ~ '/' if not (item.image_local | default(False)) else '' }}{{ item.image_name }}"
     volumes: "{{ item.volumes | default(omit) }}"
     env: "{{ item.environment | default(omit) }}"
     command: "{{ item.command | default(omit) }}"
@@ -51,7 +51,7 @@
   docker_container:
     docker_host: "{{ DOCKER_HOST | default('unix://var/run/docker.sock') }}"
     name: "{{ item.name}}"
-    image: "{{ item.docker_registry | default('docker.io') ~ '/' if item.image_local | default(False) else '' }}{{ item.image_name }}"
+    image: "{{ item.docker_registry | default('docker.io') ~ '/' if not (item.image_local | default(False)) else '' }}{{ item.image_name }}"
     volumes: "{{ item.volumes | default(omit) }}"
     env: "{{ item.environment | default(omit) }}"
     command: "{{ item.command | default(omit) }}"
@@ -72,7 +72,7 @@
   docker_container:
     docker_host: "{{ DOCKER_HOST | default('unix://var/run/docker.sock') }}"
     name: "{{ item.name}}"
-    image: "{{ item.docker_registry | default('docker.io') ~ '/' if item.image_local | default(False) else '' }}{{ item.image_name }}"
+    image: "{{ item.docker_registry | default('docker.io') ~ '/' if not (item.image_local | default(False)) else '' }}{{ item.image_name }}"
     volumes: "{{ item.volumes | default(omit) }}"
     env: "{{ item.environment | default(omit) }}"
     command: "{{ item.command | default(omit) }}"

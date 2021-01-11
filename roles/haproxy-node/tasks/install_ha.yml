@@ -2,7 +2,7 @@
     - name: Apply settings
       template:
         src: "{{inventory_dir}}/files/{{inventory_hostname}}/ha/haproxy.cfg"
-        dest: /etc/haproxy/haproxy.cfg
+        dest: "{{ haproxy_config_dir }}/haproxy.cfg"
         owner: root
         group: root
         mode: 0644

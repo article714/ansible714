@@ -1,13 +1,7 @@
----
-    - name: Apply settings
-      template:
-        src: "{{inventory_dir}}/files/{{inventory_hostname}}/ha/haproxy.cfg"
-        dest: "{{ haproxy_config_dir }}/haproxy.cfg"
-        owner: root
-        group: root
-        mode: 0644
-    
-    - name: Restart HA
-      service:
-        name: haproxy
-        state: restarted
+- name: Update apt cache
+  apt: update_cache=yes cache_valid_time=3600
+  
+- name: Install haproxy
+  apt: 
+    name: haproxy
+    state: present

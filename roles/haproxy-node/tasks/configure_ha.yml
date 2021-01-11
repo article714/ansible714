@@ -1,0 +1,18 @@
+---
+    - name: Apply settings
+      template:
+        src: "{{inventory_dir}}/files/{{inventory_hostname}}/ha/haproxy.cfg"
+        dest: "{{ haproxy_config_dir }}/haproxy.cfg"
+        owner: root
+        group: root
+        mode: 0644
+    
+    - name: Restart HA
+      service:
+        name: haproxy
+        state: restarted
+      when: machine_type == 'host' or machine_type == 'lxd'
+
+    - name: Restart HA
+      raw: sv restart haproxy
+      when: machine_type == 'container'

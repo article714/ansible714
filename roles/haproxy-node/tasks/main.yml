@@ -1,8 +1,8 @@
 ---
 
-- include: configure_apt.yml
-
 - include: install_ha.yml
+
+- include: configure_ha.yml
 
 - name: Set Up Firewall
   include: ufw_firewall.yml

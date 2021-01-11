@@ -1,7 +1,7 @@
 # Update any letsencrypt certificate
 #
 - name: Update Let's Encrypt certificates
-  hosts: WebserverNodes:HAProxyNodes
+  hosts: WebserverNodes:HAProxyNodes:LetsEncryptNodes
   remote_user: root
   become: true
 

@@ -71,7 +71,7 @@
         state: started
         restart_policy: always
         recreate: "{{ item.recreate | default('yes') }}"
-      when: not ( item.connect_host_network | default(False) or  item.networks|default(False) )
+      when: item.networks|default(False) 
       with_items: "{{ DOCKERIZED_APPS }}"
 
 
@@ -94,7 +94,7 @@
         state: started
         restart_policy: always
         recreate: "{{ item.recreate | default('yes') }}"
-      when: item.connect_host_network | default(False) and not item.networks|default(False)
+      when: item.connect_host_network | default(False) and not (item.networks|default(False))
       with_items: "{{ DOCKERIZED_APPS }}"
 
 

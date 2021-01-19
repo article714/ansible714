@@ -20,7 +20,7 @@
 
 - name: Copy Odoo ssh private key in Odoo Home
   copy:
-    src: '../keys/id_rsa_odoo'
+    src: '{{ inventory_dir }}/keys/id_rsa_odoo'
     dest: /var/lib/odoo/.ssh/id_rsa
     owner: '{{ odoo_user }}'
     group: '{{ odoo_user }}'
@@ -28,7 +28,7 @@
 
 - name: Copy Odoo ssh public key in Odoo Home
   copy:
-    src: '../keys/id_rsa_odoo.pub'
+    src: '{{ inventory_dir }}/keys/id_rsa_odoo.pub'
     dest: /var/lib/odoo/.ssh/id_rsa.pub
     owner: '{{ odoo_user }}'
     group: '{{ odoo_user }}'

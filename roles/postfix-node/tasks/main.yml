@@ -50,7 +50,7 @@
 
 - name: Copy Domain(s) keys
   copy:
-    src: '../inventory/files/{{ item }}/mail.private'
+    src: '{{ inventory_dir }}/files/{{ item }}/mail.private'
     dest: '/etc/opendkim/keys/{{ item }}/mail.private'
     owner: opendkim
     group: opendkim
@@ -69,7 +69,7 @@
 
 - name: Copy file with owner and permissions
   copy:
-    src: '../inventory/files/{{ inventory_hostname }}/{{ item }}'
+    src: '{{ inventory_dir }}/files/{{ inventory_hostname }}/{{ item }}'
     dest: '/etc/opendkim/{{ item }}'
     owner: opendkim
     group: opendkim

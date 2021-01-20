@@ -15,14 +15,14 @@
 
 - name: check if Docker directory exists
   stat:
-    path: "{{ inventory_dir ~ '/files/' ~ inventory_hostname ~ '/docker/'"
+    path: "{{ inventory_dir ~ '/files/' ~ inventory_hostname ~ '/docker/' }}"
   register: docker_config_dir
   delegate_to: 127.0.0.1
   become: false
 
 - name: Copy additional config files
   copy:
-    src: "{{ inventory_dir ~ '/files/' ~ inventory_hostname ~ '/docker/'"
+    src: "{{ inventory_dir ~ '/files/' ~ inventory_hostname ~ '/docker/' }}"
     dest: "/etc/docker"
     owner: root
     group: root

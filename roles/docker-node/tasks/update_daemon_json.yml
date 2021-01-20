@@ -17,13 +17,35 @@
     file: /etc/docker/daemon.json
     updates:
       data-root: '{{ docker_data_dir }}'
+  when: docker_default_dns | default(false)
 
 - name: Override docker conf for docker DNS on bridge network
   edit_json:
     file: /etc/docker/daemon.json
     updates:
       dns: '{{ docker_default_dns }}'
-  when: docker_default_dns
+  when: docker_default_dns | default(false)
+
+- name: Setup TLS
+  edit_json:
+    file: /etc/docker/daemon.json
+    updates:
+      tls: true
+      tlscacert: "{{ docker_tls_cacert }}"
+      tlscert: "{{ docker_tls_cert }}"
+      tlskey: "{{ docker_tls_key }}"
+      tlsverify: true
+  when: docker_with_tls | default(false)
+
+- name: Update docker sockets when needed
+  lineinfile:
+    path: "/lib/systemd/system/docker.service"
+    regexp: '^ExecStart=/usr/bin/dockerd .*$'
+    state: present
+    line: "ExecStart=/usr/bin/dockerd {{ docker_listeners }} --containerd=/run/containerd/containerd.sock"
+  when: docker_listeners | default(false)
+
+
 
 - name: Reload daemon and docker.service
   systemd:

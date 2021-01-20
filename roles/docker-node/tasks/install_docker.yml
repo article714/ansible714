@@ -12,3 +12,25 @@
      name: 
        - docker 
      state: latest
+
+- name: directory step - make a test
+  debug:
+    msg: Nous avons des fichiers pour {{inventory_hostname}} dans {{inventory_dir}}
+  when: dir_name.stat.exists
+
+- name: check if Docker directory exists
+  stat:
+    path: "{{ inventory_dir ~ '/files/' ~ inventory_hostname ~ '/docker/'"
+  register: docker_config_dir
+  delegate_to: 127.0.0.1
+  become: false
+
+- name: Copy additional config files
+  copy:
+    src: "{{ inventory_dir ~ '/files/' ~ inventory_hostname ~ '/docker/'"
+    dest: "/etc/docker"
+    owner: root
+    group: root
+    mode: 0640
+  when: docker_config_dir.stat.exists
+    

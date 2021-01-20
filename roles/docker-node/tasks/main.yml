@@ -3,7 +3,7 @@
   when: not docker_deploy_containers_only
 - include: install_docker.yml
   when: not docker_deploy_containers_only
-- include: setup_docker_data_dir.yml
+- include: update_daemon_json.yml
   when: not docker_deploy_containers_only
 - include: deploy_networks.yml
   when: not docker_deploy_containers_only

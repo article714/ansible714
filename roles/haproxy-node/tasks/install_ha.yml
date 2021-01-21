@@ -1,5 +1,6 @@
 - name: Update apt cache
   apt: update_cache=yes cache_valid_time=3600
+  when: machine_type == 'host' or machine_type == 'lxd'
   
 - name: Install haproxy
   apt: 

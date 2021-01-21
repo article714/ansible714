@@ -25,5 +25,5 @@ galaxy_info:
 dependencies:
   - { role: 'debian-based-container', when: machine_type == 'lxd' }
   - { role: 'debian-based-host', when: machine_type == 'host' }
-  - role: ansible-role-systemd-networkd
-  - role: 'letsencrypt-node'
+  - { role: 'ansible-role-systemd-networkd', when: machine_type != 'container' }
+  - { role: 'letsencrypt-node', when: letsencrypt_enable }

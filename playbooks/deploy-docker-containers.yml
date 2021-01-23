@@ -47,6 +47,7 @@
             ipv4_address: "{{ item.container_ip | default(omit)}}"
         dns_servers: "{{ item.dns | default(omit) }}"
         capabilities: "{{ item.capabilities | default(omit) }}"
+        shm_size:  "{{ item.shm_size | default(omit) }}"
         state: started
         restart_policy: always
         recreate: "{{ item.recreate | default('yes') }}"
@@ -68,6 +69,7 @@
         networks: "{{ item. networks }}"
         dns_servers: "{{ item.dns | default(omit) }}"
         capabilities: "{{ item.capabilities | default(omit) }}"
+        shm_size:  "{{ item.shm_size | default(omit) }}"
         state: started
         restart_policy: always
         recreate: "{{ item.recreate | default('yes') }}"
@@ -91,6 +93,7 @@
         network_mode: host
         dns_servers: "{{ item.dns | default(omit) }}"
         capabilities: "{{ item.capabilities | default(omit) }}"
+        shm_size:  "{{ item.shm_size | default(omit) }}"
         state: started
         restart_policy: always
         recreate: "{{ item.recreate | default('yes') }}"
